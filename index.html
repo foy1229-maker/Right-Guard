@@ -13,73 +13,74 @@
             --green: #1FA65A;
             --ink: #2B2226;
             --muted: #62626a;
-            --card-bg: rgba(255, 255, 255, 0.88); /* 반투명 유리 효과 카드 */
+            --bg-left: #f8f9fa; /* 왼쪽 대시보드 구역의 깔끔한 배경색 */
         }
 
         * { box-sizing: border-box; }
-        html, body { margin: 0; padding: 0; height: 100%; }
+        html, body { margin: 0; padding: 0; height: 100%; width: 100%; overflow: hidden; }
         
+        /* 🌗 왼쪽과 오른쪽을 나란히 배치하는 메인 컨테이너 */
         body {
             font-family: "Pretendard Variable", Pretendard, sans-serif;
             color: var(--ink);
             -webkit-font-smoothing: antialiased;
             display: flex;
-            align-items: center;
+            height: 100vh;
+            width: 100vw;
+        }
+
+        /* ⬅️ [왼쪽] 대시보드 영역 */
+        .left-panel {
+            flex: 1.1; /* 사진보다 살짝 더 넓게 공간 확보 */
+            background: var(--bg-left);
+            display: flex;
+            flex-direction: column;
             justify-content: center;
-            min-height: 100vh;
-            padding: 40px 20px;
-            position: relative;
-            
-            /* 📸 배경 이미지 설정 영역 */
-            background-image: url('고려대이미지.jpg'); 
+            align-items: center;
+            padding: 40px;
+            overflow-y: auto; /* 화면이 작아지면 스크롤 생성 */
+        }
+
+        /* ➡️ [오른쪽] 고려대 본관 사진 영역 */
+        .right-panel {
+            flex: 0.9;
+            background-image: url('고려대이미지.jpg');
             background-size: cover;
             background-position: center;
             background-repeat: no-repeat;
-            background-attachment: fixed;
+            position: relative;
         }
 
-        /* 이미지가 너무 밝아 글자가 안 보이는 것을 막아주는 어두운 반투명 막 */
-        body::before {
+        /* 사진 위에 은은한 크림슨/블랙 빛 필터를 씌워 고급스럽게 연출 */
+        .right-panel::before {
             content: "";
             position: absolute;
             top: 0; left: 0; right: 0; bottom: 0;
-            background: rgba(43, 34, 38, 0.35); /* 이미지 위에 살짝 어두운 톤 추가 */
-            backdrop-filter: blur(4px); /* 배경 이미지를 은은하게 블러 처리 */
-            -webkit-backdrop-filter: blur(4px);
-            z-index: 1;
+            background: linear-gradient(to right, rgba(248, 249, 250, 0.1), rgba(145, 0, 35, 0.15));
         }
 
-        /* 중앙 대시보드 컨테이너 (위로 얹어지도록 z-index 설정) */
-        .dashboard {
-            position: relative;
-            z-index: 2;
-            background: var(--card-bg);
-            backdrop-filter: blur(12px);
-            -webkit-backdrop-filter: blur(12px);
-            border: 1px solid rgba(255, 255, 255, 0.5);
-            border-radius: 24px;
-            padding: 45px 40px;
-            box-shadow: 0 30px 60px rgba(0, 0, 0, 0.2);
+        /* 대시보드 내부 정렬용 박스 */
+        .dashboard-content {
             width: 100%;
-            max-width: 800px;
-            text-align: center;
+            max-width: 480px; /* 안정적인 가독성을 위한 너비 제한 */
         }
 
         .header-area {
+            text-align: center;
             margin-bottom: 35px;
         }
 
         .emblem-img {
-            width: 100px;
+            width: 90px;
             height: auto;
             margin-bottom: 16px;
-            filter: drop-shadow(0 4px 12px rgba(145, 0, 35, 0.15));
+            filter: drop-shadow(0 4px 10px rgba(145, 0, 35, 0.1));
         }
 
         h1 {
             font-weight: 800;
             color: var(--ink);
-            font-size: 36px;
+            font-size: 34px;
             letter-spacing: -0.02em;
             margin: 0 0 6px 0;
         }
@@ -95,19 +96,15 @@
             font-size: 13px;
         }
 
-        /* 대시보드 그리드 구조 */
-        .grid-container {
-            display: grid;
-            grid-template-columns: repeat(2, 1fr);
-            gap: 16px;
+        /* 버튼 바구니 (1열 종대로 깔끔하고 큼직하게 배치) */
+        .btn-container {
+            display: flex;
+            flex-direction: column;
+            gap: 14px;
             margin-bottom: 35px;
         }
 
-        .full-width {
-            grid-column: span 2; 
-        }
-
-        /* 🎴 기본 버튼 공통 스타일 */
+        /* 🎴 버튼 공통 스타일 */
         .card-btn {
             font: inherit;
             font-weight: 700;
@@ -120,10 +117,10 @@
             border-radius: 14px;
             background: #ffffff;
             color: var(--ink);
-            border: 1px solid rgba(0, 0, 0, 0.05);
-            box-shadow: 0 4px 10px rgba(0, 0, 0, 0.02);
+            border: 1px solid rgba(0, 0, 0, 0.04);
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.02);
             transition: all 0.25s cubic-bezier(0.4, 0, 0.2, 1);
-            gap: 14px;
+            gap: 16px;
         }
 
         .icon-wrap {
@@ -134,98 +131,103 @@
             width: 38px;
             height: 38px;
             border-radius: 10px;
-            background: #f5f7fa;
+            background: #f1f3f5;
             transition: all 0.25s;
         }
 
-        /* 🔴 빨간색 라인 버튼 그룹 (체크리스트, 설계가이드, 애니메이션) */
+        /* 🔴 마우스 올렸을 때 버튼 전체가 신호등 컬러로 변경 (요청사항 반영) */
         .red-route:hover {
             background: var(--crimson);
             border-color: var(--crimson);
             color: #ffffff;
-            transform: translateY(-4px);
-            box-shadow: 0 10px 20px rgba(145, 0, 35, 0.25);
+            transform: translateX(6px); /* 우측 사진 쪽으로 스르륵 전진하는 세련된 효과 */
+            box-shadow: 0 8px 20px rgba(145, 0, 35, 0.15);
         }
         .red-route:hover .icon-wrap { background: rgba(255, 255, 255, 0.2); }
 
-        /* 🟡 노란색 라인 버튼 그룹 (Python) */
+        /* 🟡 노란색 신호등 그룹 */
         .amber-route:hover {
             background: var(--amber);
             border-color: var(--amber);
             color: #ffffff;
-            transform: translateY(-4px);
-            box-shadow: 0 10px 20px rgba(244, 168, 23, 0.25);
+            transform: translateX(6px);
+            box-shadow: 0 8px 20px rgba(244, 168, 23, 0.15);
         }
         .amber-route:hover .icon-wrap { background: rgba(255, 255, 255, 0.2); }
 
-        /* 🟢 초록색 라인 버튼 그룹 (Excel) */
+        /* 🟢 초록색 신호등 그룹 */
         .green-route:hover {
             background: var(--green);
             border-color: var(--green);
             color: #ffffff;
-            transform: translateY(-4px);
-            box-shadow: 0 10px 20px rgba(31, 166, 90, 0.25);
+            transform: translateX(6px);
+            box-shadow: 0 8px 20px rgba(31, 166, 90, 0.15);
         }
         .green-route:hover .icon-wrap { background: rgba(255, 255, 255, 0.2); }
 
-        /* 반응형 모바일 세팅 */
-        @media (max-width: 600px) {
-            .grid-container { grid-template-columns: 1fr; }
-            .full-width { grid-column: span 1; }
-            .dashboard { padding: 35px 20px; }
-            h1 { font-size: 28px; }
-        }
-
         footer {
             color: var(--muted);
-            font-size: 12px;
+            font-size: 11.5px;
+            text-align: center;
             letter-spacing: 0.02em;
-            border-top: 1px solid rgba(0, 0, 0, 0.06);
+            border-top: 1px solid rgba(0, 0, 0, 0.05);
             padding-top: 20px;
+        }
+
+        /* 📱 모바일/태블릿용 반응형: 화면이 너무 좁아지면 사진을 숨기고 대시보드만 꽉 차게 변경 */
+        @media (max-width: 850px) {
+            .right-panel { display: none; }
+            .left-panel { flex: 1; padding: 30px 20px; }
+            h1 { font-size: 30px; }
         }
     </style>
 </head>
 <body>
 
-    <div class="dashboard">
-        <div class="header-area">
-            <img src="emblem-koreauniv-transparent.png" alt="Right Guard Emblem" class="emblem-img">
-            <h1>Right <span>Guard</span></h1>
-            <div class="sub-tag">KOREA UNIVERSITY</div>
-        </div>
+    <div class="left-panel">
+        <div class="dashboard-content">
+            
+            <div class="header-area">
+                <img src="emblem-koreauniv-transparent.png" alt="Right Guard Emblem" class="emblem-img">
+                <h1>Right <span>Guard</span></h1>
+                <div class="sub-tag">KOREA UNIVERSITY</div>
+            </div>
 
-        <div class="grid-container">
-            
-            <a href="Right_Guard_실행일정_체크리스트.html" class="card-btn red-route">
-                <span class="icon-wrap">📅</span>
-                <span>일정 체크리스트 열기</span>
-            </a>
-            
-            <a href="Right_Guard_모형데모_설계가이드.html" class="card-btn red-route">
-                <span class="icon-wrap">📐</span>
-                <span>모형데모 설계가이드 열기</span>
-            </a>
-            
-            <a href="Right_Guard_모형데모_작동애니메이션.html" class="card-btn red-route full-width">
-                <span class="icon-wrap">🎬</span>
-                <span>작동 애니메이션 열기</span>
-            </a>
-            
-            <a href="right_guard_controller.py" class="card-btn amber-route full-width">
-                <span class="icon-wrap">🐍</span>
-                <span>Python 스크립트 다운로드</span>
-            </a>
-            
-            <a href="Right_Guard_부품_BOM_예산.xlsx" class="card-btn green-route full-width">
-                <span class="icon-wrap">📊</span>
-                <span>Excel 예산안 다운로드</span>
-            </a>
+            <div class="btn-container">
+                <a href="Right_Guard_실행일정_체크리스트.html" class="card-btn red-route">
+                    <span class="icon-wrap">📅</span>
+                    <span>일정 체크리스트 열기</span>
+                </a>
+                
+                <a href="Right_Guard_모형데모_설계가이드.html" class="card-btn red-route">
+                    <span class="icon-wrap">📐</span>
+                    <span>모형데모 설계가이드 열기</span>
+                </a>
+                
+                <a href="Right_Guard_모형데모_작동애니메이션.html" class="card-btn red-route">
+                    <span class="icon-wrap">🎬</span>
+                    <span>작동 애니메이션 열기</span>
+                </a>
+                
+                <a href="right_guard_controller.py" class="card-btn amber-route">
+                    <span class="icon-wrap">🐍</span>
+                    <span>Python 스크립트 다운로드</span>
+                </a>
+                
+                <a href="Right_Guard_부품_BOM_예산.xlsx" class="card-btn green-route">
+                    <span class="icon-wrap">📊</span>
+                    <span>Excel 예산안 다운로드</span>
+                </a>
+            </div>
+
+            <footer>
+                CRP Team : Right Guard &copy; 2026
+            </footer>
             
         </div>
-
-        <footer>
-            CRP Team : Right Guard &copy; 2026
-        </footer>
     </div>
 
+    <div class="right-panel"></div>
+
 </body>
+</html>
