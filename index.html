@@ -12,13 +12,15 @@
             --amber: #F4A823;
             --green: #1FA65A;
             --ink: #2B2226;
-            --muted: #7A6E66;
-            --bg-left: #f8f9fa;
+            --muted: #554a4f;
+            /* 💡 왼쪽 패널을 위한 고급스러운 반투명 화이트 (글래스모피즘) */
+            --glass-bg: rgba(255, 255, 255, 0.78); 
         }
 
         * { box-sizing: border-box; }
         html, body { margin: 0; padding: 0; height: 100%; width: 100%; overflow: hidden; }
         
+        /* 📸 [전체 배경] 고려대 본관 이미지를 바탕에 통째로 깔아 우측까지 이어지게 만듭니다 */
         body {
             font-family: "Pretendard Variable", Pretendard, sans-serif;
             color: var(--ink);
@@ -26,60 +28,58 @@
             display: flex;
             height: 100vh;
             width: 100vw;
+            background-image: url('ku-building.jpg');
+            background-size: cover;
+            background-position: center;
+            background-repeat: no-repeat;
         }
 
-        /* ⬅️ [왼쪽] 대시보드 영역: overflow를 없애고 딱 맞춤 */
+        /* ⬅️ [왼쪽] 반투명 유리 구역: 뒷배경 사진이 은은하게 투과됨 */
         .left-panel {
             flex: 1.1;
-            background: var(--bg-left);
+            background: var(--glass-bg);
+            backdrop-filter: blur(14px); /* 고성능 블러 처리로 휠씬 고급스러운 분위기 연출 */
+            -webkit-backdrop-filter: blur(14px);
+            border-right: 1px solid rgba(255, 255, 255, 0.4);
             display: flex;
             flex-direction: column;
             justify-content: center;
             align-items: center;
-            padding: 20px 40px; /* 세로 패딩을 줄여 공간 확보 */
+            padding: 20px 40px;
             height: 100%;
+            z-index: 2;
         }
 
-        /* ➡️ [오른쪽] 고려대 본관 사진 영역 */
+        /* ➡️ [오른쪽] 선명한 원본 사진 구역 */
         .right-panel {
             flex: 0.9;
-            background-image: url('Ku_Building.jpg');
-            background-size: cover;
-            background-position: center;
-            background-repeat: no-repeat;
-            position: relative;
             height: 100%;
-        }
-
-        .right-panel::before {
-            content: "";
-            position: absolute;
-            top: 0; left: 0; right: 0; bottom: 0;
-            background: linear-gradient(to right, rgba(248, 249, 250, 0.1), rgba(145, 0, 35, 0.12));
+            z-index: 1;
+            /* 배경은 전체 body에서 깔아줬으므로 여기서는 투명하게 비워둡니다 */
+            background: transparent; 
         }
 
         .dashboard-content {
             width: 100%;
-            max-width: 440px; /* 조금 더 슬림하게 축소 */
+            max-width: 440px;
         }
 
-        /* 헤더 영역 컴팩트하게 축소 */
         .header-area {
             text-align: center;
-            margin-bottom: 24px; /* 마진 축소 */
+            margin-bottom: 24px;
         }
 
         .emblem-img {
-            width: 75px; /* 엠블럼 크기 축소 (90px -> 75px) */
+            width: 75px;
             height: auto;
             margin-bottom: 12px;
-            filter: drop-shadow(0 4px 10px rgba(145, 0, 35, 0.1));
+            filter: drop-shadow(0 4px 10px rgba(145, 0, 35, 0.15));
         }
 
         h1 {
             font-weight: 800;
             color: var(--ink);
-            font-size: 28px; /* 글씨 크기 축소 (34px -> 28px) */
+            font-size: 28px;
             letter-spacing: -0.02em;
             margin: 0 0 4px 0;
         }
@@ -92,37 +92,35 @@
             color: var(--crimson);
             font-weight: 700;
             letter-spacing: 0.05em;
-            font-size: 11px; /* 글씨 크기 축소 (13px -> 11px) */
+            font-size: 11px;
         }
 
-        /* 버튼 간격을 좁혀 한눈에 들어오게 구성 */
         .btn-container {
             display: flex;
             flex-direction: column;
-            gap: 10px; /* 간격 축소 (14px -> 10px) */
+            gap: 10px;
             margin-bottom: 24px;
         }
 
-        /* 🎴 버튼 크기 다이어트 (패딩 감소) */
+        /* 🎴 버튼 스타일: 반투명 배경 위에 얹어지므로 더욱 선명하게 화이트 처리 */
         .card-btn {
             font: inherit;
             font-weight: 700;
-            font-size: 14px; /* 폰트 크기 축소 (15px -> 14px) */
+            font-size: 14px;
             text-decoration: none;
             display: flex;
             align-items: center;
             justify-content: flex-start;
-            padding: 13px 20px; /* 패딩 대폭 축소하여 슬림화 */
+            padding: 13px 20px;
             border-radius: 12px;
             background: #ffffff;
             color: var(--ink);
-            border: 1px solid rgba(0, 0, 0, 0.04);
-            box-shadow: 0 3px 8px rgba(0, 0, 0, 0.02);
+            border: 1px solid rgba(0, 0, 0, 0.03);
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.03);
             transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1);
             gap: 14px;
         }
 
-        /* 이모지 박스도 콤팩트하게 변경 */
         .icon-wrap {
             font-size: 16px;
             display: flex;
@@ -135,13 +133,13 @@
             transition: all 0.2s;
         }
 
-        /* 🔴 마우스 오버 신호등 효과 (전체 컬러링 + 슬라이드) */
+        /* 🔴 마우스 올렸을 때 신호등 풀컬러 스왑 + 우측 슬라이드 효과 */
         .red-route:hover {
             background: var(--crimson);
             border-color: var(--crimson);
             color: #ffffff;
             transform: translateX(5px);
-            box-shadow: 0 6px 15px rgba(145, 0, 35, 0.12);
+            box-shadow: 0 6px 15px rgba(145, 0, 35, 0.2);
         }
         .red-route:hover .icon-wrap { background: rgba(255, 255, 255, 0.2); }
 
@@ -151,7 +149,7 @@
             border-color: var(--amber);
             color: #ffffff;
             transform: translateX(5px);
-            box-shadow: 0 6px 15px rgba(244, 168, 23, 0.12);
+            box-shadow: 0 6px 15px rgba(244, 168, 23, 0.2);
         }
         .amber-route:hover .icon-wrap { background: rgba(255, 255, 255, 0.2); }
 
@@ -161,7 +159,7 @@
             border-color: var(--green);
             color: #ffffff;
             transform: translateX(5px);
-            box-shadow: 0 6px 15px rgba(31, 166, 90, 0.12);
+            box-shadow: 0 6px 15px rgba(31, 166, 90, 0.2);
         }
         .green-route:hover .icon-wrap { background: rgba(255, 255, 255, 0.2); }
 
@@ -170,15 +168,19 @@
             font-size: 11px;
             text-align: center;
             letter-spacing: 0.02em;
-            border-top: 1px solid rgba(0, 0, 0, 0.04);
+            border-top: 1px solid rgba(0, 0, 0, 0.06);
             padding-top: 16px;
         }
 
-        /* 📱 모바일/태블릿 반응형 */
+        /* 📱 모바일 디바이스 최적화 반응형 */
         @media (max-width: 850px) {
             .right-panel { display: none; }
-            .left-panel { flex: 1; padding: 20px; }
-            body { overflow: auto; } /* 모바일 환경에서는 스크롤 허용 */
+            .left-panel { 
+                flex: 1; 
+                padding: 20px; 
+                background: rgba(255, 255, 255, 0.88); /* 모바일에서는 가독성을 위해 불투명도 약간 상승 */
+            }
+            body { overflow: auto; }
         }
     </style>
 </head>
