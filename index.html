@@ -3,7 +3,7 @@
 <head>
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
-    <title>Right Guard · Files & Pages </title>
+    <title>Right Guard · Files & Pages</title>
     <link rel="stylesheet" as="style" crossorigin href="https://cdn.jsdelivr.net/gh/orioncactus/pretendard@v1.3.9/dist/web/variable/pretendardvariable.min.css">
     
     <style>
@@ -44,11 +44,25 @@
             background: var(--card);
             border: 1px solid var(--line);
             border-radius: var(--r);
-            padding: 30px 24px;
+            padding: 35px 24px 30px;
             box-shadow: 0 4px 20px rgba(110, 0, 25, 0.06);
             width: 100%;
             max-width: 420px;
             text-align: center;
+        }
+
+        /* 엠블럼 헤더 레이아웃 스타일 */
+        .brand-header {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 12px;
+        }
+
+        .emblem-img {
+            width: 110px; /* 대문 정중앙에 딱 알맞은 크기 설정 */
+            height: auto;
+            object-fit: contain;
         }
 
         .wm h1 {
@@ -77,29 +91,15 @@
             margin: 20px 0 24px;
         }
         .rule .bar {
-            position: absolute;
-            left: 0;
-            right: 0;
-            top: 0;
-            height: 6px;
-            background: var(--crimson);
-            border-radius: 2px;
+            position: absolute; left: 0; right: 0; top: 0; height: 6px;
+            background: var(--crimson); border-radius: 2px;
         }
         .rule .core {
-            position: absolute;
-            left: 8px;
-            right: 8px;
-            top: 2.5px;
-            height: 1px;
+            position: absolute; left: 8px; right: 8px; top: 2.5px; height: 1px;
             background: var(--ivory);
         }
         .rule::before, .rule::after {
-            content: "";
-            position: absolute;
-            top: -1px;
-            height: 10px;
-            width: 3px;
-            background: var(--crimson);
+            content: ""; position: absolute; top: -1px; height: 10px; width: 3px; background: var(--crimson);
         }
         .rule::before { left: 0; }
         .rule::after { right: 0; }
@@ -180,9 +180,12 @@
 <body>
 
     <div class="menu-card">
-        <div class="wm">
-            <h1>Right Guard</h1>
-            <div class="tag">Korea University</div>
+        <div class="brand-header">
+            <img src="emblem-koreauniv-transparent.png" alt="Right Guard Emblem" class="emblem-img">
+            <div class="wm">
+                <h1>Right Guard</h1>
+                <div class="tag">Korea University</div>
+            </div>
         </div>
 
         <div class="rule">
@@ -203,6 +206,7 @@
             
             <a href="Right_Guard_부품_BOM_예산.xlsx" class="link-btn xlsx-btn">📊 Excel 예산안 다운로드</a>
         </div>
+
         <footer>
             CRP Team : Right Guard &copy; 2026
         </footer>
