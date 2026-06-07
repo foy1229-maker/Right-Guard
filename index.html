@@ -3,212 +3,212 @@
 <head>
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
-    <title>Right Guard · Files & Pages</title>
+    <title>Right Guard · Project Dashboard</title>
     <link rel="stylesheet" as="style" crossorigin href="https://cdn.jsdelivr.net/gh/orioncactus/pretendard@v1.3.9/dist/web/variable/pretendardvariable.min.css">
     
     <style>
-        /* 기존 페이지의 세련된 색상 조합을 그대로 가져왔습니다 */
         :root {
             --crimson: #910023;
-            --ivory: #E7DECE;
-            --red: #E23A2E;
+            --crimson-light: rgba(145, 0, 35, 0.06);
             --amber: #F4A823;
             --green: #1FA65A;
-            --paper: #F4EEE1;
-            --card: #FFFFFF;
-            --ink: #2B2226;
-            --muted: #7A6E66;
-            --faint: #A99C8E;
-            --line: #E3D9C7;
-            --r: 14px;
+            --bg-gradient: linear-gradient(135deg, #f5f7fa 0%, #e4e8f0 100%);
+            --card-bg: rgba(255, 255, 255, 0.85);
+            --ink: #1e1e24;
+            --muted: #62626a;
+            --border: rgba(145, 0, 35, 0.12);
         }
 
         * { box-sizing: border-box; }
-        html, body { margin: 0; }
+        html, body { margin: 0; padding: 0; height: 100%; }
         
         body {
-            font-family: "Pretendard Variable", Pretendard, -apple-system, "Apple SD Gothic Neo", "Malgun Gothic", sans-serif;
+            font-family: "Pretendard Variable", Pretendard, sans-serif;
             color: var(--ink);
-            background: var(--paper);
-            line-height: 1.55;
+            background: var(--bg-gradient);
             -webkit-font-smoothing: antialiased;
             display: flex;
             align-items: center;
             justify-content: center;
             min-height: 100vh;
-            padding: 20px;
+            padding: 40px 20px;
         }
 
-        /* 중앙 메뉴 보드 레이아웃 */
-        .menu-card {
-            background: var(--card);
-            border: 1px solid var(--line);
-            border-radius: var(--r);
-            padding: 35px 24px 30px;
-            box-shadow: 0 4px 20px rgba(110, 0, 25, 0.06);
+        /* 메인 대시보드 컨테이너 (고려대 차세대통신 스타일) */
+        .dashboard {
+            background: var(--card-bg);
+            backdrop-filter: blur(10px); /* 반투명 유리 효과 */
+            -webkit-backdrop-filter: blur(10px);
+            border: 1px solid rgba(255, 255, 255, 0.6);
+            border-radius: 24px;
+            padding: 50px 40px;
+            box-shadow: 0 20px 40px rgba(0, 0, 0, 0.04), 0 1px 3px rgba(110, 0, 25, 0.02);
             width: 100%;
-            max-width: 420px;
+            max-width: 800px; /* 더 넓고 시원한 레이아웃 */
             text-align: center;
         }
 
-        /* 엠블럼 헤더 레이아웃 스타일 */
-        .brand-header {
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-            gap: 12px;
+        .header-area {
+            margin-bottom: 40px;
         }
 
         .emblem-img {
-            width: 110px; /* 대문 정중앙에 딱 알맞은 크기 설정 */
+            width: 95px;
             height: auto;
-            object-fit: contain;
+            margin-bottom: 20px;
+            filter: drop-shadow(0 4px 10px rgba(145, 0, 35, 0.15));
         }
 
-        .wm h1 {
+        h1 {
             font-weight: 800;
-            color: var(--crimson);
-            font-size: 32px;
-            letter-spacing: .01em;
-            margin: 0;
-            line-height: 1;
+            color: var(--ink);
+            font-size: 36px;
+            letter-spacing: -0.02em;
+            margin: 0 0 8px 0;
         }
 
-        .wm .tag {
-            color: var(--crimson);
-            font-weight: 700;
-            letter-spacing: .15em;
-            font-size: 11px;
-            text-transform: uppercase;
-            margin-top: 8px;
-            opacity: .85;
+        h1 span {
+            color: var(--crimson); /* 포인트 컬러 */
         }
 
-        /* 기존 페이지의 시그니처 붉은 선 장식 */
-        .rule {
-            position: relative;
-            height: 8px;
-            margin: 20px 0 24px;
-        }
-        .rule .bar {
-            position: absolute; left: 0; right: 0; top: 0; height: 6px;
-            background: var(--crimson); border-radius: 2px;
-        }
-        .rule .core {
-            position: absolute; left: 8px; right: 8px; top: 2.5px; height: 1px;
-            background: var(--ivory);
-        }
-        .rule::before, .rule::after {
-            content: ""; position: absolute; top: -1px; height: 10px; width: 3px; background: var(--crimson);
-        }
-        .rule::before { left: 0; }
-        .rule::after { right: 0; }
-
-        .lead {
+        .sub-tag {
             color: var(--muted);
-            font-size: 14px;
-            margin: 0 0 24px;
+            font-weight: 600;
+            letter-spacing: 0.05em;
+            font-size: 13px;
+            text-transform: uppercase;
         }
 
-        /* 버튼 바구니 레이아웃 */
-        .btn-container {
-            display: flex;
-            flex-direction: column;
-            gap: 12px;
+        /* 현대적인 격자형 버튼 배치 (Grid) */
+        .grid-container {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr); /* 기본 2열 배치 */
+            gap: 16px;
+            margin-bottom: 40px;
         }
 
-        /* 공통 버튼 디자인 규칙 */
-        .link-btn {
+        /* 3번째 파일(애니메이션)을 강조하기 위해 넓게 배치 */
+        .full-width {
+            grid-column: span 2; 
+        }
+
+        /* 세련된 보더리스 카드 버튼 디자인 */
+        .card-btn {
             font: inherit;
-            font-weight: 700;
-            font-size: 14px;
+            font-weight: 600;
+            font-size: 15px;
             text-decoration: none;
-            display: block;
-            padding: 14px;
-            border-radius: 9px;
-            cursor: pointer;
-            transition: .15s;
-            text-align: center;
-            box-shadow: 0 2px 5px rgba(0,0,0,0.04);
+            display: flex;
+            align-items: center;
+            justify-content: flex-start;
+            padding: 20px 24px;
+            border-radius: 16px;
+            background: #ffffff;
+            color: var(--ink);
+            border: 1px solid rgba(0, 0, 0, 0.04);
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.02);
+            transition: all 0.25s cubic-bezier(0.4, 0, 0.2, 1);
+            gap: 14px;
         }
 
-        .link-btn:active {
-            transform: translateY(1px);
+        /* 이모지 아이콘 스타일링 */
+        .icon-wrap {
+            font-size: 20px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            width: 40px;
+            height: 40px;
+            border-radius: 10px;
+            background: #f5f7fa;
+            transition: all 0.25s;
         }
 
-        /* 파일 타입별 색상 디자인 매칭 */
-        .html-btn {
+        /* 마우스 오버 시 역동적인 애니메이션 효과 */
+        .card-btn:hover {
+            transform: translateY(-4px);
+            box-shadow: 0 12px 24px rgba(145, 0, 35, 0.06);
+            border-color: rgba(145, 0, 35, 0.15);
+            background: #ffffff;
+        }
+
+        /* 각 버튼 종류별 마우스 오버 시 아이콘 배경색 변화 */
+        .card-btn.html-style:hover .icon-wrap { background: var(--crimson-light); color: var(--crimson); }
+        .card-btn.py-style:hover .icon-wrap { background: rgba(244, 168, 35, 0.1); }
+        .card-btn.xlsx-style:hover .icon-wrap { background: rgba(31, 166, 90, 0.1); }
+
+        /* 강조하고 싶은 핵심 메인 버튼 스타일 */
+        .card-btn.featured {
             background: var(--crimson);
-            color: #fff;
-            border: 1px solid var(--crimson);
+            color: #ffffff;
+            border-color: var(--crimson);
         }
-        .html-btn:hover {
+        .card-btn.featured .icon-wrap {
+            background: rgba(255, 255, 255, 0.15);
+        }
+        .card-btn.featured:hover {
             background: #75001c;
             border-color: #75001c;
+            box-shadow: 0 12px 24px rgba(145, 0, 35, 0.2);
         }
 
-        .py-btn {
-            background: var(--amber);
-            color: #fff;
-            border: 1px solid var(--amber);
-        }
-        .py-btn:hover {
-            background: #d99116;
-            border-color: #d99116;
+        /* 반응형: 화면이 작아지면 1열로 세로 정렬 */
+        @media (max-width: 600px) {
+            .grid-container { grid-template-columns: 1fr; }
+            .full-width { grid-column: span 1; }
+            .dashboard { padding: 40px 20px; }
+            h1 { font-size: 28px; }
         }
 
-        .xlsx-btn {
-            background: var(--green);
-            color: #fff;
-            border: 1px solid var(--green);
-        }
-        .xlsx-btn:hover {
-            background: #178548;
-            border-color: #178548;
-        }
-
-        /* 하단 구분선과 푸터 */
         footer {
-            margin-top: 24px;
-            padding-top: 14px;
-            border-top: 1px dashed var(--line);
             color: var(--faint);
-            font-size: 11px;
+            font-size: 12px;
+            letter-spacing: 0.02em;
+            border-top: 1px solid rgba(0, 0, 0, 0.05);
+            padding-top: 20px;
         }
     </style>
 </head>
 <body>
 
-    <div class="menu-card">
-        <div class="brand-header">
+    <div class="dashboard">
+        <div class="header-area">
             <img src="emblem-koreauniv-transparent.png" alt="Right Guard Emblem" class="emblem-img">
-            <div class="wm">
-                <h1>Right Guard</h1>
-                <div class="tag">Korea University</div>
-            </div>
+            <h1>Right <span>Guard</span></h1>
+            <div class="sub-tag">Korea University · Next-Gen Communications Style</div>
         </div>
 
-        <div class="rule">
-            <div class="bar"></div>
-            <div class="core"></div>
-        </div>
-
-        <p class="lead">데모 페이지 및 관련 프로젝트 파일 모음입니다.</p>
-
-        <div class="btn-container">
-            <a href="Right_Guard_실행일정_체크리스트.html" class="link-btn html-btn">📅 일정 체크리스트 열기</a>
+        <div class="grid-container">
             
-            <a href="Right_Guard_모형데모_설계가이드.html" class="link-btn html-btn">📐 모형데모 설계가이드 열기</a>
+            <a href="Right_Guard_실행일정_체크리스트.html" class="card-btn html-style">
+                <span class="icon-wrap">📅</span>
+                <span>일정 체크리스트 열기</span>
+            </a>
             
-            <a href="Right_Guard_모형데모_작동애니메이션.html" class="link-btn html-btn">🎬 작동 애니메이션 열기</a>
+            <a href="Right_Guard_모형데모_설계가이드.html" class="card-btn html-style">
+                <span class="icon-wrap">📐</span>
+                <span>모형데모 설계가이드 열기</span>
+            </a>
             
-            <a href="right_guard_controller.py" class="link-btn py-btn">🐍 Python 스크립트 다운로드</a>
+            <a href="Right_Guard_모형데모_작동애니메이션.html" class="card-btn html-style featured full-width">
+                <span class="icon-wrap">🎬</span>
+                <span>Right Guard 작동 애니메이션 열기</span>
+            </a>
             
-            <a href="Right_Guard_부품_BOM_예산.xlsx" class="link-btn xlsx-btn">📊 Excel 예산안 다운로드</a>
+            <a href="right_guard_controller.py" class="card-btn py-style">
+                <span class="icon-wrap">🐍</span>
+                <span>Python 스크립트 다운로드</span>
+            </a>
+            
+            <a href="Right_Guard_부품_BOM_예산.xlsx" class="card-btn xlsx-style">
+                <span class="icon-wrap">📊</span>
+                <span>Excel 예산안 다운로드</span>
+            </a>
+            
         </div>
 
         <footer>
-            CRP Team : Right Guard &copy; 2026
+            © 2026 CRP Team Right Guard. All rights reserved.
         </footer>
     </div>
 
