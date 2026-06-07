@@ -17,19 +17,23 @@
         }
         h1 {
             color: #333;
+            margin-bottom: 5px;
+        }
+        p {
+            color: #666;
             margin-bottom: 30px;
+            font-size: 0.95rem;
         }
         .btn-container {
             display: flex;
             flex-direction: column;
             gap: 15px;
-            width: 300px;
+            width: 320px;
         }
         .link-btn {
             display: block;
             padding: 15px;
             text-align: center;
-            background-color: #4CAF50;
             color: white;
             text-decoration: none;
             border-radius: 8px;
@@ -38,19 +42,32 @@
             transition: background 0.2s, transform 0.2s;
         }
         .link-btn:hover {
-            background-color: #45a049;
             transform: translateY(-2px);
         }
+        /* 버튼 색상 구분 */
+        .html-btn { background-color: #4CAF50; } /* 초록색 (웹페이지) */
+        .html-btn:hover { background-color: #45a049; }
+        
+        .py-btn { background-color: #008CBA; }   /* 파란색 (파이썬 파일) */
+        .py-btn:hover { background-color: #007bb5; }
+        
+        .xlsx-btn { background-color: #2e7d32; } /* 진한 초록색 (엑셀 파일) */
+        .xlsx-btn:hover { background-color: #1b5e20; }
     </style>
 </head>
 <body>
 
-    <h1>🛡️ Right Guard Links</h1>
+    <h1>🛡️ Right Guard</h1>
+    <p>프로젝트 파일 및 페이지 모음</p>
 
     <div class="btn-container">
-        <a href="이름1.html" class="link-btn">첫 번째 페이지로 이동</a>
-        <a href="이름2.html" class="link-btn">두 번째 페이지로 이동</a>
-        <a href="이름3.html" class="link-btn">세 번째 페이지로 이동</a>
+        <a href="Right_Guard_실행일정_체크리스트.html" class="link-btn html-btn">📄 첫 번째 웹페이지 열기</a>
+        
+        <a href="Right_Guard_모형데모_설계가이드.html" class="link-btn html-btn">📄 두 번째 웹페이지 열기</a>
+        
+        <a href="right_guard_controller.py" class="link-btn py-btn">🐍 Python 스크립트 다운로드</a>
+        
+        <a href="Right_Guard_부품_BOM_예산.xlsx" class="link-btn xlsx-btn">📊 Excel 데이터 다운로드</a>
     </div>
 
 </body>
