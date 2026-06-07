@@ -12,14 +12,13 @@
             --amber: #F4A823;
             --green: #1FA65A;
             --ink: #2B2226;
-            --muted: #62626a;
-            --bg-left: #f8f9fa; /* 왼쪽 대시보드 구역의 깔끔한 배경색 */
+            --muted: #7A6E66;
+            --bg-left: #f8f9fa;
         }
 
         * { box-sizing: border-box; }
         html, body { margin: 0; padding: 0; height: 100%; width: 100%; overflow: hidden; }
         
-        /* 🌗 왼쪽과 오른쪽을 나란히 배치하는 메인 컨테이너 */
         body {
             font-family: "Pretendard Variable", Pretendard, sans-serif;
             color: var(--ink);
@@ -29,60 +28,60 @@
             width: 100vw;
         }
 
-        /* ⬅️ [왼쪽] 대시보드 영역 */
+        /* ⬅️ [왼쪽] 대시보드 영역: overflow를 없애고 딱 맞춤 */
         .left-panel {
-            flex: 1.1; /* 사진보다 살짝 더 넓게 공간 확보 */
+            flex: 1.1;
             background: var(--bg-left);
             display: flex;
             flex-direction: column;
             justify-content: center;
             align-items: center;
-            padding: 40px;
-            overflow-y: auto; /* 화면이 작아지면 스크롤 생성 */
+            padding: 20px 40px; /* 세로 패딩을 줄여 공간 확보 */
+            height: 100%;
         }
 
         /* ➡️ [오른쪽] 고려대 본관 사진 영역 */
         .right-panel {
             flex: 0.9;
-            background-image: url('Ku_Building.jpg');
+            background-image: url('고려대이미지.jpg');
             background-size: cover;
             background-position: center;
             background-repeat: no-repeat;
             position: relative;
+            height: 100%;
         }
 
-        /* 사진 위에 은은한 크림슨/블랙 빛 필터를 씌워 고급스럽게 연출 */
         .right-panel::before {
             content: "";
             position: absolute;
             top: 0; left: 0; right: 0; bottom: 0;
-            background: linear-gradient(to right, rgba(248, 249, 250, 0.1), rgba(145, 0, 35, 0.15));
+            background: linear-gradient(to right, rgba(248, 249, 250, 0.1), rgba(145, 0, 35, 0.12));
         }
 
-        /* 대시보드 내부 정렬용 박스 */
         .dashboard-content {
             width: 100%;
-            max-width: 480px; /* 안정적인 가독성을 위한 너비 제한 */
+            max-width: 440px; /* 조금 더 슬림하게 축소 */
         }
 
+        /* 헤더 영역 컴팩트하게 축소 */
         .header-area {
             text-align: center;
-            margin-bottom: 35px;
+            margin-bottom: 24px; /* 마진 축소 */
         }
 
         .emblem-img {
-            width: 90px;
+            width: 75px; /* 엠블럼 크기 축소 (90px -> 75px) */
             height: auto;
-            margin-bottom: 16px;
+            margin-bottom: 12px;
             filter: drop-shadow(0 4px 10px rgba(145, 0, 35, 0.1));
         }
 
         h1 {
             font-weight: 800;
             color: var(--ink);
-            font-size: 34px;
+            font-size: 28px; /* 글씨 크기 축소 (34px -> 28px) */
             letter-spacing: -0.02em;
-            margin: 0 0 6px 0;
+            margin: 0 0 4px 0;
         }
 
         h1 span {
@@ -93,55 +92,56 @@
             color: var(--crimson);
             font-weight: 700;
             letter-spacing: 0.05em;
-            font-size: 13px;
+            font-size: 11px; /* 글씨 크기 축소 (13px -> 11px) */
         }
 
-        /* 버튼 바구니 (1열 종대로 깔끔하고 큼직하게 배치) */
+        /* 버튼 간격을 좁혀 한눈에 들어오게 구성 */
         .btn-container {
             display: flex;
             flex-direction: column;
-            gap: 14px;
-            margin-bottom: 35px;
+            gap: 10px; /* 간격 축소 (14px -> 10px) */
+            margin-bottom: 24px;
         }
 
-        /* 🎴 버튼 공통 스타일 */
+        /* 🎴 버튼 크기 다이어트 (패딩 감소) */
         .card-btn {
             font: inherit;
             font-weight: 700;
-            font-size: 15px;
+            font-size: 14px; /* 폰트 크기 축소 (15px -> 14px) */
             text-decoration: none;
             display: flex;
             align-items: center;
             justify-content: flex-start;
-            padding: 18px 24px;
-            border-radius: 14px;
+            padding: 13px 20px; /* 패딩 대폭 축소하여 슬림화 */
+            border-radius: 12px;
             background: #ffffff;
             color: var(--ink);
             border: 1px solid rgba(0, 0, 0, 0.04);
-            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.02);
-            transition: all 0.25s cubic-bezier(0.4, 0, 0.2, 1);
-            gap: 16px;
+            box-shadow: 0 3px 8px rgba(0, 0, 0, 0.02);
+            transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1);
+            gap: 14px;
         }
 
+        /* 이모지 박스도 콤팩트하게 변경 */
         .icon-wrap {
-            font-size: 20px;
+            font-size: 16px;
             display: flex;
             align-items: center;
             justify-content: center;
-            width: 38px;
-            height: 38px;
-            border-radius: 10px;
+            width: 32px;
+            height: 32px;
+            border-radius: 8px;
             background: #f1f3f5;
-            transition: all 0.25s;
+            transition: all 0.2s;
         }
 
-        /* 🔴 마우스 올렸을 때 버튼 전체가 신호등 컬러로 변경 (요청사항 반영) */
+        /* 🔴 마우스 오버 신호등 효과 (전체 컬러링 + 슬라이드) */
         .red-route:hover {
             background: var(--crimson);
             border-color: var(--crimson);
             color: #ffffff;
-            transform: translateX(6px); /* 우측 사진 쪽으로 스르륵 전진하는 세련된 효과 */
-            box-shadow: 0 8px 20px rgba(145, 0, 35, 0.15);
+            transform: translateX(5px);
+            box-shadow: 0 6px 15px rgba(145, 0, 35, 0.12);
         }
         .red-route:hover .icon-wrap { background: rgba(255, 255, 255, 0.2); }
 
@@ -150,8 +150,8 @@
             background: var(--amber);
             border-color: var(--amber);
             color: #ffffff;
-            transform: translateX(6px);
-            box-shadow: 0 8px 20px rgba(244, 168, 23, 0.15);
+            transform: translateX(5px);
+            box-shadow: 0 6px 15px rgba(244, 168, 23, 0.12);
         }
         .amber-route:hover .icon-wrap { background: rgba(255, 255, 255, 0.2); }
 
@@ -160,25 +160,25 @@
             background: var(--green);
             border-color: var(--green);
             color: #ffffff;
-            transform: translateX(6px);
-            box-shadow: 0 8px 20px rgba(31, 166, 90, 0.15);
+            transform: translateX(5px);
+            box-shadow: 0 6px 15px rgba(31, 166, 90, 0.12);
         }
         .green-route:hover .icon-wrap { background: rgba(255, 255, 255, 0.2); }
 
         footer {
             color: var(--muted);
-            font-size: 11.5px;
+            font-size: 11px;
             text-align: center;
             letter-spacing: 0.02em;
-            border-top: 1px solid rgba(0, 0, 0, 0.05);
-            padding-top: 20px;
+            border-top: 1px solid rgba(0, 0, 0, 0.04);
+            padding-top: 16px;
         }
 
-        /* 📱 모바일/태블릿용 반응형: 화면이 너무 좁아지면 사진을 숨기고 대시보드만 꽉 차게 변경 */
+        /* 📱 모바일/태블릿 반응형 */
         @media (max-width: 850px) {
             .right-panel { display: none; }
-            .left-panel { flex: 1; padding: 30px 20px; }
-            h1 { font-size: 30px; }
+            .left-panel { flex: 1; padding: 20px; }
+            body { overflow: auto; } /* 모바일 환경에서는 스크롤 허용 */
         }
     </style>
 </head>
