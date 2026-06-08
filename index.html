@@ -13,13 +13,12 @@
             --green: #1FA65A;
             --ink: #1e1e24;
             --muted: #554a4f;
-            --glass-bg: rgba(255, 255, 255, 0.78); 
+            --glass-bg: rgba(255, 255, 255, 0.82); /* 문구 가독성을 위해 불투명도 미세 상승 */
         }
 
         * { box-sizing: border-box; }
         html, body { margin: 0; padding: 0; height: 100%; width: 100%; overflow: hidden; }
         
-        /* 📸 전체 배경화면에 ku_image.jpg 적용 */
         body {
             font-family: "Pretendard Variable", Pretendard, sans-serif;
             color: var(--ink);
@@ -27,9 +26,9 @@
             display: flex;
             flex-direction: column;
             align-items: center;
-            justify-content: flex-start; /* ⬆️ 중앙이 아닌 위쪽부터 배치 시작 */
+            justify-content: flex-start;
             min-height: 100vh;
-            padding: 30px 20px; /* 위쪽 여백을 적절히 부여 */
+            padding: 30px 20px;
             
             background-image: url('ku_image.webp');
             background-size: cover;
@@ -37,35 +36,34 @@
             background-repeat: no-repeat;
         }
 
-        /* 🪟 [상단 와이드 대시보드] 가로로 길고 슬림해진 글래스모피즘 카드 */
+        /* 🪟 [상단 와이드 대시보드] 가로 구조 유지 */
         .dashboard {
             width: 100%;
-            max-width: 1100px; /* 가로로 넓게 펼치기 위해 최대 너비 확장 */
+            max-width: 1200px; /* 문구 추가 공간을 고려해 최대 너비 약간 확장 */
             background: var(--glass-bg);
             backdrop-filter: blur(16px);
             -webkit-backdrop-filter: blur(16px);
             border: 1px solid rgba(255, 255, 255, 0.5);
             border-radius: 20px;
-            padding: 20px 30px; /* 위아래 패딩을 대폭 줄여서 슬림하게 변경 */
+            padding: 20px 30px;
             box-shadow: 0 15px 35px rgba(0, 0, 0, 0.15);
             
             display: flex;
-            align-items: center; /* 로고와 버튼들이 가로로 나란히 서도록 설정 */
+            align-items: center;
             justify-content: space-between;
-            gap: 30px;
+            gap: 24px;
         }
 
-        /* 헤더 영역을 왼쪽 정렬로 바꾸고 콤팩트하게 다이어트 */
         .header-area {
             display: flex;
             align-items: center;
             gap: 14px;
             text-align: left;
-            flex-shrink: 0; /* 로고 구역이 찌그러지지 않게 고정 */
+            flex-shrink: 0;
         }
 
         .emblem-img {
-            width: 50px; /* 가로 배치를 위해 로고 크기를 슬림하게 축소 */
+            width: 50px;
             height: auto;
             filter: drop-shadow(0 3px 6px rgba(145, 0, 35, 0.12));
         }
@@ -78,7 +76,7 @@
         h1 {
             font-weight: 800;
             color: var(--ink);
-            font-size: 22px; /* 폰트 크기 최적화 */
+            font-size: 22px;
             letter-spacing: -0.01em;
             margin: 0;
             line-height: 1.1;
@@ -96,47 +94,69 @@
             margin-top: 2px;
         }
 
-        /* ➡️ 버튼들을 오른쪽으로 가로 정렬시키는 그리드 구조 */
+        /* 💬 [새로 추가된 슬로건 구역] */
+        .slogan-area {
+            flex-grow: 1; /* 남는 중간 공간을 가득 채움 */
+            text-align: center;
+            padding: 0 10px;
+            border-left: 1px solid rgba(0, 0, 0, 0.08);  /* 구분선 효과 */
+            border-right: 1px solid rgba(0, 0, 0, 0.08); /* 구분선 효과 */
+        }
+
+        .slogan-text {
+            font-size: 14px;
+            font-weight: 700;
+            letter-spacing: -0.01em;
+            line-height: 1.4;
+            color: #333338;
+        }
+
+        .slogan-text .highlight {
+            color: var(--crimson); /* 영문 핵심 슬로건에 고대 크림슨 컬러 포인트 */
+            font-weight: 800;
+        }
+
+        /* ➡️ 버튼 정렬 그리드 (가로 형태 유지) */
         .btn-container {
             display: grid;
-            grid-template-columns: repeat(5, 1fr); /* 5개의 버튼을 완벽한 가로 1줄로 배치 */
-            gap: 10px;
-            flex-grow: 1; /* 남은 가로 공간을 버튼들이 골고루 나눠 가짐 */
+            grid-template-columns: repeat(5, 1fr);
+            gap: 8px;
+            flex-shrink: 0; /* 버튼이 슬로건에 밀려 찌그러지지 않게 방지 */
         }
 
         /* 🎴 슬림화된 가로형 카드 버튼 */
         .card-btn {
             font: inherit;
             font-weight: 700;
-            font-size: 12.5px; /* 한 줄에 다 들어가도록 글자 크기 살짝 조절 */
+            font-size: 12.5px;
             text-decoration: none;
             display: flex;
             align-items: center;
-            justify-content: center; /* 가로형 구조에 맞게 중앙 정렬 */
-            padding: 12px 10px;
+            justify-content: center;
+            padding: 12px 12px;
             border-radius: 10px;
             background: #ffffff;
             color: var(--ink);
             border: 1px solid rgba(0, 0, 0, 0.03);
             box-shadow: 0 3px 6px rgba(0, 0, 0, 0.02);
             transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1);
-            gap: 8px;
-            white-space: nowrap; /* 글자가 아래로 튕겨서 두 줄이 되지 않게 고정 */
+            gap: 6px;
+            white-space: nowrap;
         }
 
         .icon-wrap {
-            font-size: 14px;
+            font-size: 13px;
             display: flex;
             align-items: center;
             justify-content: center;
-            width: 24px;
-            height: 24px;
+            width: 22px;
+            height: 22px;
             border-radius: 6px;
             background: #f1f3f5;
             transition: all 0.2s;
         }
 
-        /* 🔴 마우스 올렸을 때 신호등 풀컬러 스왑 + 살짝 위로 튕기는 효과 */
+        /* 🔴 마우스 오버 효과 */
         .red-route:hover {
             background: var(--crimson);
             border-color: var(--crimson);
@@ -166,16 +186,17 @@
         }
         .green-route:hover .icon-wrap { background: rgba(255, 255, 255, 0.2); }
 
-        /* 📱 반응형 세팅: 태블릿이나 모바일처럼 화면이 좁아지면 깔끔하게 바둑판형/세로형으로 자동 전환 */
-        @media (max-width: 1024px) {
-            .dashboard { flex-direction: column; align-items: center; padding: 25px 20px; }
+        /* 📱 반응형 세팅: 화면이 좁은 태블릿/모바일에서는 보기 좋게 위아래 3단 레이아웃으로 변경 */
+        @media (max-width: 1150px) {
+            .dashboard { flex-direction: column; align-items: center; padding: 25px 20px; gap: 18px; }
             .header-area { text-align: center; flex-direction: column; }
-            .btn-container { grid-template-columns: repeat(3, 1fr); width: 100%; } /* 3열 배치 */
+            .slogan-area { border-left: none; border-right: none; border-top: 1px dashed rgba(0,0,0,0.1); border-bottom: 1px dashed rgba(0,0,0,0.1); padding: 12px 0; width: 100%; }
+            .btn-container { grid-template-columns: repeat(3, 1fr); width: 100%; }
             body { overflow: auto; }
         }
 
         @media (max-width: 650px) {
-            .btn-container { grid-template-columns: 1fr; } /* 모바일은 1열 종대 */
+            .btn-container { grid-template-columns: 1fr; }
         }
     </style>
 </head>
@@ -188,6 +209,13 @@
             <div class="title-text">
                 <h1>Right <span>Guard</span></h1>
                 <div class="sub-tag">KOREA UNIVERSITY</div>
+            </div>
+        </div>
+
+        <div class="slogan-area">
+            <div class="slogan-text">
+                <span class="highlight">Right Turn, Right Time:</span><br>
+                보행자 보호 중심의 교통안전 체계 제안
             </div>
         </div>
 
