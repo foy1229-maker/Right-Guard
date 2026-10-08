@@ -39,7 +39,7 @@ footer b{color:var(--muted)}
 @media (max-width:520px){.wrap{padding:22px 12px 50px}.ku{margin-left:0;text-align:left;width:100%}}
 @media print{body{background:#fff}.fig svg{min-width:0}.card,.fig{break-inside:avoid}}
 </style></head><body><div class="wrap">
-<div class="brand"><img class="emblem" src="https://foy1229-maker.github.io/Right-Guard/emblem-koreauniv-transparent.png" alt="Right Guard 엠블럼">
+<div class="brand"><img class="emblem" src="emblem-koreauniv-transparent.png" onerror="this.onerror=null;this.src='https://foy1229-maker.github.io/Right-Guard/emblem-koreauniv-transparent.png'" alt="Right Guard 엠블럼">
 <div class="wm"><h1>RIGHT GUARD</h1><div class="tag">RIGHT TURN, RIGHT TIME · 창의연구 프로젝트 (CRP)</div></div>
 <div class="ku"><div class="ku1">KOREA UNIVERSITY</div><div class="ku2">KU CreativeX · 공감형 우회전 교통안전</div></div></div>
 <div class="rule"><span class="bar"></span><span class="core"></span></div>
@@ -93,14 +93,16 @@ footer b{color:var(--muted)}
 
 <div class="stitle"><span class="n">3</span>센서 배치 &amp; 척도</div>
 <div class="grid2"><div class="card"><p><span class="pill">설치</span> 모퉁이 기둥(횡단보도 진입부 쪽)에 레이더를 고정하고, 횡단보도와 진입로가 함께 보이도록 살짝 북쪽으로 조준합니다.</p>
-<p style="margin:0;color:var(--muted);font-size:13.5px">블루투스 거리가 멀면 센서 유닛과 LED 유닛을 가깝게 두세요.</p></div>
+<p style="margin:0;color:var(--muted);font-size:13.5px">진행일지(2) 계획대로 두 장치 모두 모퉁이 보도 위 전봇대에 다는 것을 전제로 합니다. 블루투스 거리가 멀면 센서 유닛과 LED 유닛을 가깝게 두세요.</p></div>
 <div class="card"><table>
 <tr><th>항목</th><th>실제 기준 (시뮬레이션)</th><th>모형 (1:10)</th></tr>
 <tr><td>설치 높이</td><td>1.1 m</td><td>약 11 cm</td></tr>
 <tr><td>감지 거리</td><td>6 m</td><td>약 60 cm</td></tr>
 <tr><td>감지 각도</td><td>수평 ±60°</td><td>동일</td></tr>
-<tr><td>조준</td><td>약 −12° (횡단보도 쪽)</td><td>동일</td></tr>
+<tr><td>상하 감지각</td><td>±35° (LD2450)</td><td>동일</td></tr>
+<tr><td>조준</td><td>횡단보도 쪽으로 약 10°</td><td>동일</td></tr>
 </table></div></div>
+<div class="note"><b>미리 비교하기</b> · 메타버스 <b>조절</b> 패널에서 감지 거리·좌우각·조준·설치 높이·기울기와 보행자 키를 바꾸면, 레이더 범위와 ‘기둥 가까운 아이가 빔 아래로 빠지는지’를 측면도로 바로 볼 수 있어요. 보문역 사거리처럼 4차로(약 13 m) 횡단보도는 6 m 레이더 하나로 건너편 끝까지 닿지 않으니(기본값: 차가 지나는 쪽 약 57%), 설치 위치와 센서 개수를 함께 검토하세요.</div>
 
 <div class="stitle"><span class="n">4</span>LED 표시 (P10 32×16)</div>
 <div class="grid2">
@@ -143,8 +145,9 @@ footer b{color:var(--muted)}
 <p style="margin:12px 0 0;font-size:13.5px">산출: <b>감지율</b> = ②③ 중 ✕ 비율 · <b>오감지율</b> = ①⑤ 중 ✕ 비율 · <b>반응시간</b> = 감지부터 ✕ 표시까지 (로그 기준). 목표: <b>감지율 95% · 오감지율 5% · 반응 1초 이내</b>.</p></div>
 
 <div class="stitle"><span class="n">8</span>자동 시연 (메타버스 기본 화면)</div>
-<div class="card"><p>예전 ‘작동 애니메이션’ 자리를 메타버스 <b>자동 시연</b> 화면이 대신합니다. 파일을 열면 기본으로 재생되며, 우회전 차량 · 보행자 · 신호가 자동으로 움직이고, Right Guard 설치 → 보행자 감지 → ✕ 표시 → 실제 기기 연결 장면을 순서대로 보여 줍니다.</p>
-<ul style="margin:6px 0 0"><li>단축키: <code>1</code> 자동 시연 · <code>2</code> 직접 운전 · <code>3</code> 관제 모드 · <code>P</code> 보행자 보내기 · <code>G</code> Right Guard 켜기/끄기 · <code>F</code> 전체 화면</li></ul></div>
+<div class="card"><p>예전 ‘작동 애니메이션’ 자리를 메타버스 <b>자동 시연</b> 화면이 대신합니다. 무대는 시범 설치 후보지인 <b>보문역 사거리</b>(보문로 × 고려대로)의 남동 모퉁이 — 신설동 쪽에서 올라와 고려대 방향으로 우회전하는 차가 5번 출구 공사장 가림막 앞 횡단보도를 지나는 곳이에요. 파일을 열면 기본으로 재생되며, 문제 상황 → Right Guard 설치 → 보행자 감지 → ✕ 표시 → 1초 뒤 → → 실제 기기 연결 장면을 순서대로 보여 줍니다.</p>
+<ul style="margin:6px 0 0"><li>관제 모드의 <b>조절</b> 패널: 센서 범위(거리·각도·조준·높이·기울기), 보행자 걷는 속도·키, 차량 속도·교통량을 바꿔 볼 수 있어요. 자동 시연은 항상 기본값으로 재생됩니다.</li>
+<li>단축키: <code>1</code> 자동 시연 · <code>2</code> 직접 운전 · <code>3</code> 관제 모드 · <code>P</code> 보행자 보내기 · <code>G</code> Right Guard 켜기/끄기 · <code>F</code> 전체 화면</li></ul></div>
 
 <div class="stitle"><span class="n">9</span>중간평가 라이브 시연 순서 (약 3~4분)</div>
 <div class="card"><ul>
