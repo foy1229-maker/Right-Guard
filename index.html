@@ -105,7 +105,7 @@
         /* 버튼 컨테이너 (로고와 한 줄에 위치) */
         .btn-container {
             display: grid;
-            grid-template-columns: repeat(6, 1fr);
+            grid-template-columns: repeat(4, 1fr);
             gap: 8px;
             flex-grow: 1; /* 남은 가로 공간을 버튼들이 채움 */
             max-width: 1040px; /* 버튼 구역이 과도하게 넓어지는 것 방지 */
@@ -194,14 +194,14 @@
 
         /* 버튼 6개가 한 줄에 다 안 들어가는 폭에서는 3개씩 두 줄 */
         @media (max-width: 1400px) and (min-width: 1101px) {
-            .btn-container { grid-template-columns: repeat(3, 1fr); max-width: 640px; }
+            .btn-container { grid-template-columns: repeat(4, 1fr); }
         }
 
         /* 📱 반응형 세팅: 화면이 좁아지면 모바일 레이아웃 최적화 */
         @media (max-width: 1100px) {
             .top-row { flex-direction: column; gap: 16px; }
             .header-area { text-align: center; }
-            .btn-container { grid-template-columns: repeat(3, 1fr); width: 100%; max-width: 100%; }
+            .btn-container { grid-template-columns: repeat(2, 1fr); width: 100%; max-width: 100%; }
             body { overflow: auto; }
         }
 
@@ -226,33 +226,19 @@
 
             <div class="btn-container">
                 <a href="Right_Guard_실행일정_체크리스트.html" target="_blank" rel="noopener noreferrer" class="card-btn red-route">
-                    <span class="icon-wrap">📅</span>
                     <span>일정 체크리스트</span>
                 </a>
-                
+
                 <a href="Right_Guard_모형데모_설계가이드.html" target="_blank" rel="noopener noreferrer" class="card-btn red-route">
-                    <span class="icon-wrap">📐</span>
                     <span>모형데모 설계가이드</span>
-                </a>
-                
-                <a href="Right_Guard_모형데모_작동애니메이션.html" target="_blank" rel="noopener noreferrer" class="card-btn red-route">
-                    <span class="icon-wrap">🎬</span>
-                    <span>작동 애니메이션</span>
-                </a>
-                
-                <a href="right_guard_controller.py" target="_blank" rel="noopener noreferrer" class="card-btn amber-route">
-                    <span class="icon-wrap">🐍</span>
-                    <span>Python 스크립트</span>
-                </a>
-                
-                <a href="Right_Guard_부품_BOM_예산.xlsx" target="_blank" rel="noopener noreferrer" class="card-btn green-route">
-                    <span class="icon-wrap">📊</span>
-                    <span>Excel 예산안</span>
                 </a>
 
                 <a href="RightGuard_Metaverse.html" target="_blank" rel="noopener noreferrer" class="card-btn red-route">
-                    <span class="icon-wrap">🌐</span>
-                    <span>메타버스 시연</span>
+                    <span>자동 시연</span>
+                </a>
+
+                <a href="RightGuard_Metaverse.html#sandbox" target="_blank" rel="noopener noreferrer" class="card-btn red-route">
+                    <span>직접 조작 시연</span>
                 </a>
             </div>
             
