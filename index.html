@@ -1,269 +1,301 @@
 <!doctype html>
 <html lang="ko">
 <head>
-    <meta charset="utf-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1">
-    <title>Right Guard · Project Dashboard</title>
-    <link rel="stylesheet" as="style" crossorigin href="https://cdn.jsdelivr.net/gh/orioncactus/pretendard@v1.3.9/dist/web/variable/pretendardvariable.min.css">
-    
-    <style>
-        :root {
-            --crimson: #910023;
-            --amber: #F4A823;
-            --green: #1FA65A;
-            --ink: #1e1e24;
-            --muted: #554a4f;
-            --glass-bg: rgba(255, 255, 255, 0.82); 
-        }
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Right Guard · Project Dashboard</title>
+  <link rel="stylesheet" as="style" crossorigin href="https://cdn.jsdelivr.net/gh/orioncactus/pretendard@v1.3.9/dist/web/variable/pretendardvariable.min.css">
+  <style>
+:root {
+  --abyss: #05080b;
+  --face-top: #12303a;
+  --face: #0b1a20;
+  --face-deep: #071014;
+  --gold-hi: #f2dfb1;
+  --gold: #c49a5a;
+  --gold-lo: #6e5330;
+  --ivory: #efe6d2;
+  --body: #b9b2a3;
+  --muted: #8e887b;
+  --teal: #73d2de;
+  --signal: #ff7a6b;
+}
+* { box-sizing: border-box; }
+html { -webkit-text-size-adjust: 100%; }
+body {
+  margin: 0;
+  min-height: 100vh;
+  min-height: 100svh;
+  color: var(--ivory);
+  background: var(--abyss);
+  font-family: "Pretendard Variable", Pretendard, -apple-system, BlinkMacSystemFont, "Apple SD Gothic Neo", "Noto Sans KR", sans-serif;
+  -webkit-font-smoothing: antialiased;
+  word-break: keep-all;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  padding: clamp(24px, 5vh, 48px) 16px clamp(20px, 4vh, 36px);
+  overflow-x: hidden;
+}
+/* 본관 사진 위에 거의 불투명한 어둠 — 게임에서 증강을 고를 때 뒤 화면이 어두워지는 느낌 */
+body::before {
+  content: "";
+  position: fixed;
+  inset: 0;
+  z-index: -1;
+  background:
+    radial-gradient(70% 60% at 50% 58%, rgba(10, 30, 38, .55) 0%, rgba(5, 8, 11, 0) 70%),
+    linear-gradient(rgba(5, 8, 11, .86), rgba(5, 8, 11, .93)),
+    url('ku_image.webp?v=3') center / cover no-repeat;
+}
 
-        * { box-sizing: border-box; }
-        html, body { margin: 0; padding: 0; height: 100%; width: 100%; overflow: hidden; }
-        
-        body {
-            font-family: "Pretendard Variable", Pretendard, sans-serif;
-            color: var(--ink);
-            -webkit-font-smoothing: antialiased;
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-            justify-content: flex-start;
-            min-height: 100vh;
-            padding: 30px 20px;
-            
-            background-image: url('ku_image.webp?v=3');
-            background-size: cover;
-            background-position: center;
-            background-repeat: no-repeat;
-        }
+/* ── 머리말: 학과 + 프로젝트 이름 */
+.masthead {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 28px;
+  text-align: left;
+}
+.dept { display: flex; align-items: center; gap: 16px; }
+.emblem { width: 58px; height: auto; display: block; filter: drop-shadow(0 6px 14px rgba(0, 0, 0, .5)); }
+.dept-name strong { display: block; font-size: 24px; font-weight: 700; letter-spacing: -0.01em; color: var(--ivory); }
+.dept-name span { display: block; margin-top: 5px; font-size: 13px; line-height: 1.35; color: var(--body); letter-spacing: .01em; }
+.rule { width: 1px; height: 64px; background: linear-gradient(transparent, var(--gold), transparent); }
+.project h1 { margin: 0; font-size: 46px; line-height: 1; font-weight: 800; letter-spacing: -0.015em; color: var(--ivory); }
+.project p { margin: 9px 0 0; font-size: 12px; font-weight: 700; letter-spacing: .24em; color: var(--gold); }
 
-        /* 🪟 [반투명 대시보드 판] 전체 구조 */
-        .dashboard {
-            width: 100%;
-            max-width: 1150px;
-            background: var(--glass-bg);
-            backdrop-filter: blur(16px);
-            -webkit-backdrop-filter: blur(16px);
-            border: 1px solid rgba(255, 255, 255, 0.5);
-            border-radius: 20px;
-            padding: 24px 30px;
-            box-shadow: 0 15px 35px rgba(0, 0, 0, 0.15);
-            
-            display: flex;
-            flex-direction: column; /* 1층과 2층을 위아래로 나누기 위해 column 사용 */
-            gap: 18px;
-        }
+.prompt { margin: clamp(22px, 4.5vh, 40px) 0 clamp(18px, 3.5vh, 30px); font-size: 15px; color: var(--muted); letter-spacing: .02em; }
 
-        /* ➡️ [1층] 로고와 버튼들이 완벽하게 한 줄로 나열되는 구역 */
-        .top-row {
-            display: flex;
-            align-items: center;
-            justify-content: space-between;
-            gap: 24px;
-            width: 100%;
-        }
+/* ── 카드 3장 */
+.cards {
+  display: flex;
+  justify-content: center;
+  gap: clamp(18px, 2.6vw, 36px);
+  perspective: 1400px;
+}
+.slot { display: flex; flex-direction: column; align-items: center; gap: 16px; animation: deal .75s cubic-bezier(.2, .85, .25, 1) both; animation-delay: calc(var(--i) * 130ms + 120ms); }
+@keyframes deal {
+  from { opacity: 0; transform: translateY(54px) rotateX(10deg) scale(.94); }
+  to { opacity: 1; transform: none; }
+}
+.aug {
+  --cut: 18px;
+  display: flex;
+  flex: 1 1 auto;
+  width: clamp(240px, 28vw, 304px);
+  min-height: clamp(400px, 56vh, 468px);
+  color: inherit;
+  text-decoration: none;
+  outline: none;
+  filter: drop-shadow(0 18px 28px rgba(0, 0, 0, .6));
+  transition: transform .35s cubic-bezier(.2, .8, .2, 1), filter .35s;
+}
+.aug-frame {
+  display: flex;
+  flex: 1 1 auto;
+  padding: 6px;
+  clip-path: polygon(var(--cut) 0, calc(100% - var(--cut)) 0, 100% var(--cut), 100% calc(100% - var(--cut)), calc(100% - var(--cut)) 100%, var(--cut) 100%, 0 calc(100% - var(--cut)), 0 var(--cut));
+  background: linear-gradient(158deg, var(--gold-hi) 0%, var(--gold) 20%, var(--gold-lo) 46%, #9c7a46 64%, var(--gold-hi) 100%);
+  transition: filter .35s;
+}
+.aug-face {
+  --c2: 15.5px;
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  flex: 1 1 auto;
+  padding: clamp(26px, 4.4vh, 38px) 24px 28px;
+  text-align: center;
+  clip-path: polygon(var(--c2) 0, calc(100% - var(--c2)) 0, 100% var(--c2), 100% calc(100% - var(--c2)), calc(100% - var(--c2)) 100%, var(--c2) 100%, 0 calc(100% - var(--c2)), 0 var(--c2));
+  background: radial-gradient(130% 62% at 50% 0%, var(--face-top) 0%, var(--face) 52%, var(--face-deep) 100%);
+}
+/* 안쪽 금색 실선 + 위·아래 가운데 보석 */
+.aug-line { position: absolute; inset: 10px; border: 1px solid rgba(239, 217, 166, .26); border-radius: 10px; pointer-events: none; }
+.aug-line::before, .aug-line::after {
+  content: ""; position: absolute; left: 50%; width: 9px; height: 9px; margin-left: -4.5px;
+  background: var(--gold); transform: rotate(45deg); box-shadow: 0 0 0 3px var(--face);
+}
+.aug-line::before { top: -5px; }
+.aug-line::after { bottom: -5px; background: var(--gold-lo); }
 
-        /* 로고 및 타이틀 */
-        .header-area {
-            display: flex;
-            align-items: center;
-            gap: 14px;
-            flex-shrink: 0;
-        }
+.medal { width: clamp(92px, 13vh, 116px); height: auto; flex: none; overflow: visible; }
+.medal-ticks { fill: none; stroke: var(--gold); stroke-opacity: .7; stroke-width: 2; stroke-linecap: round; transform-origin: 60px 60px; transition: transform .6s cubic-bezier(.2, .8, .2, 1), stroke-opacity .35s; }
+.aug-title { margin-top: clamp(14px, 2.6vh, 22px); font-size: clamp(19px, 2.2vw, 25px); white-space: nowrap; font-weight: 700; letter-spacing: -0.01em; color: var(--ivory); }
+.chips { display: flex; flex-wrap: wrap; justify-content: center; gap: 6px; margin-top: 10px; }
+.chips span { padding: 3px 8px 4px; border-radius: 3px; font-size: 12px; font-weight: 600; color: #cfc6b2; background: #24323b; box-shadow: inset 0 0 0 1px rgba(239, 217, 166, .12); }
+.aug-desc { margin-top: clamp(14px, 2.6vh, 22px); max-width: 236px; font-size: 14.5px; line-height: 1.62; color: var(--body); word-break: keep-all; }
+.aug-desc em { font-style: normal; font-weight: 600; white-space: nowrap; }
+.nw { white-space: nowrap; }
+.hl-gold { color: #e9c983; }
+.hl-teal { color: var(--teal); }
+.hl-red { color: var(--signal); }
 
-        /* 고려대학교 차세대통신학과 가로형 이미지 */
-        .dept-img {
-            display: block;
-            height: 46px;
-            width: auto;
-        }
+/* 고를 때: 떠오르며 테두리가 밝아짐 */
+.aug:hover, .aug:focus-visible {
+  transform: translateY(-12px);
+  filter: drop-shadow(0 0 18px rgba(242, 207, 132, .5)) drop-shadow(0 26px 34px rgba(0, 0, 0, .65));
+}
+.aug:hover .aug-frame, .aug:focus-visible .aug-frame { filter: brightness(1.18) saturate(1.08); }
+.aug:hover .medal-ticks, .aug:focus-visible .medal-ticks { transform: rotate(30deg); stroke-opacity: 1; }
+.aug:active { transform: translateY(-6px) scale(.985); }
+.aug:focus-visible .aug-line { border-color: rgba(242, 223, 177, .7); }
 
-        .brand-divider {
-            width: 1px;
-            height: 38px;
-            background: rgba(0, 0, 0, 0.14);
-            flex-shrink: 0;
-        }
+/* 카드 밑 키 표시 (게임의 다시 굴리기 칸 자리) */
+.key {
+  display: grid; place-items: center;
+  width: 38px; height: 30px;
+  font-size: 13px; font-weight: 700; color: var(--body);
+  background: linear-gradient(#1a2a31, #10191e);
+  border: 1px solid rgba(196, 154, 90, .45);
+  border-radius: 3px;
+}
 
-        .title-text {
-            display: flex;
-            flex-direction: column;
-        }
+.slogan { margin: clamp(26px, 4.5vh, 44px) 0 0; font-size: 14px; color: var(--muted); text-align: center; }
+.slogan b { color: #e9c983; font-weight: 700; }
 
-        h1 {
-            font-weight: 800;
-            color: var(--ink);
-            font-size: 22px;
-            letter-spacing: -0.01em;
-            margin: 0;
-            line-height: 1.1;
-        }
-
-        h1 span {
-            color: var(--crimson);
-        }
-
-        .sub-tag {
-            color: var(--crimson);
-            font-weight: 700;
-            letter-spacing: 0.05em;
-            font-size: 10px;
-            margin-top: 2px;
-        }
-
-        /* 버튼 컨테이너 (로고와 한 줄에 위치) */
-        .btn-container {
-            display: grid;
-            grid-template-columns: repeat(4, 1fr);
-            gap: 8px;
-            flex-grow: 1; /* 남은 가로 공간을 버튼들이 채움 */
-            max-width: 1040px; /* 버튼 구역이 과도하게 넓어지는 것 방지 */
-        }
-
-        /* 🎴 버튼 디자인 */
-        .card-btn {
-            font: inherit;
-            font-weight: 700;
-            font-size: 12.5px;
-            text-decoration: none;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            padding: 12px 8px;
-            border-radius: 10px;
-            background: #ffffff;
-            color: var(--ink);
-            border: 1px solid rgba(0, 0, 0, 0.03);
-            box-shadow: 0 3px 6px rgba(0, 0, 0, 0.02);
-            transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1);
-            gap: 6px;
-            white-space: nowrap;
-        }
-
-        .icon-wrap {
-            font-size: 13px;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            width: 22px;
-            height: 22px;
-            border-radius: 6px;
-            background: #f1f3f5;
-            transition: all 0.2s;
-        }
-
-        /* 🔴 마우스 오버 효과 */
-        .red-route:hover {
-            background: var(--crimson);
-            border-color: var(--crimson);
-            color: #ffffff;
-            transform: translateY(-3px);
-            box-shadow: 0 5px 12px rgba(145, 0, 35, 0.2);
-        }
-        .red-route:hover .icon-wrap { background: rgba(255, 255, 255, 0.2); }
-
-        .amber-route:hover {
-            background: var(--amber);
-            border-color: var(--amber);
-            color: #ffffff;
-            transform: translateY(-3px);
-            box-shadow: 0 5px 12px rgba(244, 168, 23, 0.2);
-        }
-        .amber-route:hover .icon-wrap { background: rgba(255, 255, 255, 0.2); }
-
-        .green-route:hover {
-            background: var(--green);
-            border-color: var(--green);
-            color: #ffffff;
-            transform: translateY(-3px);
-            box-shadow: 0 5px 12px rgba(31, 166, 90, 0.2);
-        }
-        .green-route:hover .icon-wrap { background: rgba(255, 255, 255, 0.2); }
-
-        /* 💬 [2층] 한 줄 구조 아래에 넓게 깔리는 프로젝트 슬로건 구역 */
-        .slogan-area {
-            width: 100%;
-            text-align: center;
-            padding-top: 14px;
-            border-top: 1px solid rgba(0, 0, 0, 0.06); /* 상단 한 줄 구역과 분리감을 주는 선 */
-        }
-
-        .slogan-text {
-            font-size: 14px;
-            font-weight: 700;
-            letter-spacing: -0.01em;
-            line-height: 1.4;
-            color: #2b2b30;
-        }
-
-        .slogan-text .highlight {
-            color: var(--crimson);
-            font-weight: 800;
-        }
-
-        /* 버튼 6개가 한 줄에 다 안 들어가는 폭에서는 3개씩 두 줄 */
-        @media (max-width: 1400px) and (min-width: 1101px) {
-            .btn-container { grid-template-columns: repeat(4, 1fr); }
-        }
-
-        /* 📱 반응형 세팅: 화면이 좁아지면 모바일 레이아웃 최적화 */
-        @media (max-width: 1100px) {
-            .top-row { flex-direction: column; gap: 16px; }
-            .header-area { text-align: center; }
-            .btn-container { grid-template-columns: repeat(2, 1fr); width: 100%; max-width: 100%; }
-            body { overflow: auto; }
-        }
-
-        @media (max-width: 650px) {
-            .btn-container { grid-template-columns: 1fr; }
-            .header-area { flex-direction: column; gap: 10px; }
-            .brand-divider { display: none; }
-            .title-text { align-items: center; }
-            .dept-img { height: auto; width: 100%; max-width: 240px; }
-        }
-    </style>
+/* 노트북처럼 낮은 화면 */
+@media (max-height: 780px) and (min-width: 761px) {
+  .project h1 { font-size: 40px; }
+  .emblem { width: 50px; }
+  .aug { min-height: clamp(380px, 60vh, 440px); }
+}
+/* 태블릿 */
+@media (max-width: 1000px) and (min-width: 761px) {
+  .aug-desc { font-size: 13.5px; }
+  .masthead { gap: 20px; }
+  .project h1 { font-size: 38px; }
+}
+/* 휴대폰: 세로로 한 장씩 */
+@media (max-width: 760px) {
+  .masthead { flex-direction: column; gap: 14px; text-align: center; }
+  .dept { gap: 12px; text-align: left; }
+  .emblem { width: 44px; }
+  .dept-name strong { font-size: 19px; }
+  .dept-name span { font-size: 11.5px; }
+  .rule { width: 72px; height: 1px; background: linear-gradient(90deg, transparent, var(--gold), transparent); }
+  .project h1 { font-size: 36px; }
+  .cards { flex-direction: column; align-items: center; gap: 20px; width: 100%; }
+  .slot { width: 100%; max-width: 400px; }
+  .aug { width: 100%; min-height: 0; }
+  .aug-face { padding: 26px 22px 24px; }
+  .medal { width: 84px; }
+  .aug-title { margin-top: 12px; font-size: 22px; white-space: normal; }
+  .aug-desc { margin-top: 12px; max-width: 320px; font-size: 14px; }
+  .key { display: none; }
+}
+@media (prefers-reduced-motion: reduce) {
+  .slot { animation: none; }
+  .aug, .aug-frame, .medal-ticks { transition: none; }
+  .aug:hover, .aug:focus-visible { transform: none; }
+}
+  </style>
 </head>
 <body>
+  <svg width="0" height="0" style="position:absolute" aria-hidden="true" focusable="false">
+    <defs>
+      <linearGradient id="rg-gold" x1="0" y1="0" x2="1" y2="1">
+        <stop offset="0" stop-color="#f2dfb1"/><stop offset=".45" stop-color="#c49a5a"/><stop offset="1" stop-color="#6e5330"/>
+      </linearGradient>
+      <radialGradient id="rg-medal" cx=".5" cy=".38" r=".7">
+        <stop offset="0" stop-color="#1d4049"/><stop offset=".7" stop-color="#0d1d23"/><stop offset="1" stop-color="#081115"/>
+      </radialGradient>
+    </defs>
+  </svg>
 
-    <div class="dashboard">
-        
-        <div class="top-row">
-            
-            <div class="header-area">
-                <img src="ku-dept-nextgen.webp" alt="고려대학교 차세대통신학과" class="dept-img">
-                <span class="brand-divider" aria-hidden="true"></span>
-                <div class="title-text">
-                    <h1>Right <span>Guard</span></h1>
-                    <div class="sub-tag">PROJECT DASHBOARD</div>
-                </div>
-            </div>
-
-            <div class="btn-container">
-                <a href="Right_Guard_실행일정_체크리스트.html" target="_blank" rel="noopener noreferrer" class="card-btn red-route">
-                    <span>일정 체크리스트</span>
-                </a>
-
-                <a href="Right_Guard_모형데모_설계가이드.html" target="_blank" rel="noopener noreferrer" class="card-btn red-route">
-                    <span>모형데모 설계가이드</span>
-                </a>
-
-                <a href="RightGuard_Metaverse.html" target="_blank" rel="noopener noreferrer" class="card-btn red-route">
-                    <span>자동 시연</span>
-                </a>
-
-                <a href="RightGuard_Metaverse.html#sandbox" target="_blank" rel="noopener noreferrer" class="card-btn red-route">
-                    <span>직접 조작 시연</span>
-                </a>
-            </div>
-            
-        </div>
-        
-        <div class="slogan-area">
-            <div class="slogan-text">
-                <span class="highlight">Right Turn, Right Time:</span> 보행자 보호 중심의 교통안전 체계 제안
-            </div>
-        </div>
-        
+  <header class="masthead">
+    <div class="dept">
+      <img class="emblem" src="ku-emblem.webp" alt="고려대학교 엠블럼" width="164" height="220">
+      <div class="dept-name">
+        <strong>고려대학교 차세대통신학과</strong>
+        <span>Korea University Department of<br>Next Generation Telecommunication</span>
+      </div>
     </div>
+    <span class="rule" aria-hidden="true"></span>
+    <div class="project">
+      <h1>Right Guard</h1>
+      <p>PROJECT DASHBOARD</p>
+    </div>
+  </header>
 
+  <p class="prompt">열어 볼 화면을 고르세요</p>
+
+  <main class="cards">
+      <div class="slot" style="--i:0">
+        <a class="aug" href="Right_Guard_실행일정_체크리스트.html" target="_blank" rel="noopener noreferrer" aria-labelledby="t0" aria-describedby="d0" data-key="1">
+          <span class="aug-frame"><span class="aug-face">
+            <span class="aug-line" aria-hidden="true"></span>
+            <svg class="medal" viewBox="0 0 120 120" aria-hidden="true" focusable="false">
+            <path class="medal-ticks" d="M111.00 60.00L118.00 60.00M109.26 73.20L114.57 74.62M104.17 85.50L110.23 89.00M96.06 96.06L99.95 99.95M85.50 104.17L89.00 110.23M73.20 109.26L74.62 114.57M60.00 111.00L60.00 118.00M46.80 109.26L45.38 114.57M34.50 104.17L31.00 110.23M23.94 96.06L20.05 99.95M15.83 85.50L9.77 89.00M10.74 73.20L5.43 74.62M9.00 60.00L2.00 60.00M10.74 46.80L5.43 45.38M15.83 34.50L9.77 31.00M23.94 23.94L20.05 20.05M34.50 15.83L31.00 9.77M46.80 10.74L45.38 5.43M60.00 9.00L60.00 2.00M73.20 10.74L74.62 5.43M85.50 15.83L89.00 9.77M96.06 23.94L99.95 20.05M104.17 34.50L110.23 31.00M109.26 46.80L114.57 45.38"/>
+            <circle cx="60" cy="60" r="47" fill="url(#rg-medal)" stroke="url(#rg-gold)" stroke-width="3"/>
+            <circle cx="60" cy="60" r="40.5" fill="none" stroke="#efd9a6" stroke-opacity=".22"/>
+            <rect x="39" y="43" width="42" height="38" rx="5" fill="#efe3c4"/>
+            <path d="M39 48a5 5 0 0 1 5-5h32a5 5 0 0 1 5 5v5H39z" fill="#c49a5a"/>
+            <rect x="48" y="37.5" width="5" height="11" rx="2.5" fill="#efe3c4" stroke="#0b1a20" stroke-width="1.6"/>
+            <rect x="67" y="37.5" width="5" height="11" rx="2.5" fill="#efe3c4" stroke="#0b1a20" stroke-width="1.6"/>
+            <path d="M48.5 66.5l7 7 15-15.5" fill="none" stroke="#0b1a20" stroke-width="5.2" stroke-linecap="round" stroke-linejoin="round"/>
+          </svg>
+            <span class="aug-title" id="t0">일정 체크리스트</span>
+            <span class="chips"><span>진행 현황</span><span>역할 분담</span></span>
+            <span class="aug-desc" id="d0">8월부터 지금까지 해 온 일과 <em class="hl-gold">10월부터 3월까지</em>의 계획을 한 화면에서 봐요. 역할별 할 일에 체크하면 <em class="hl-teal">팀원 모두에게 바로 공유</em>돼요.</span>
+          </span></span>
+        </a>
+        <span class="key" aria-hidden="true" title="키보드 1">1</span>
+      </div>
+      <div class="slot" style="--i:1">
+        <a class="aug" href="Right_Guard_모형데모_설계가이드.html" target="_blank" rel="noopener noreferrer" aria-labelledby="t1" aria-describedby="d1" data-key="2">
+          <span class="aug-frame"><span class="aug-face">
+            <span class="aug-line" aria-hidden="true"></span>
+            <svg class="medal" viewBox="0 0 120 120" aria-hidden="true" focusable="false">
+            <path class="medal-ticks" d="M111.00 60.00L118.00 60.00M109.26 73.20L114.57 74.62M104.17 85.50L110.23 89.00M96.06 96.06L99.95 99.95M85.50 104.17L89.00 110.23M73.20 109.26L74.62 114.57M60.00 111.00L60.00 118.00M46.80 109.26L45.38 114.57M34.50 104.17L31.00 110.23M23.94 96.06L20.05 99.95M15.83 85.50L9.77 89.00M10.74 73.20L5.43 74.62M9.00 60.00L2.00 60.00M10.74 46.80L5.43 45.38M15.83 34.50L9.77 31.00M23.94 23.94L20.05 20.05M34.50 15.83L31.00 9.77M46.80 10.74L45.38 5.43M60.00 9.00L60.00 2.00M73.20 10.74L74.62 5.43M85.50 15.83L89.00 9.77M96.06 23.94L99.95 20.05M104.17 34.50L110.23 31.00M109.26 46.80L114.57 45.38"/>
+            <circle cx="60" cy="60" r="47" fill="url(#rg-medal)" stroke="url(#rg-gold)" stroke-width="3"/>
+            <circle cx="60" cy="60" r="40.5" fill="none" stroke="#efd9a6" stroke-opacity=".22"/>
+            <rect x="33.5" y="44" width="53" height="32" rx="4" fill="#0e2128" stroke="#efe3c4" stroke-width="2.4"/>
+            <circle cx="39.6" cy="50.2" r="1.6" fill="#efe3c4" fill-opacity=".16"/><circle cx="44.7" cy="50.2" r="1.6" fill="#efe3c4" fill-opacity=".16"/><circle cx="49.8" cy="50.2" r="1.6" fill="#efe3c4" fill-opacity=".16"/><circle cx="54.9" cy="50.2" r="1.6" fill="#efe3c4" fill-opacity=".16"/><circle cx="60.0" cy="50.2" r="1.6" fill="#efe3c4" fill-opacity=".16"/><circle cx="65.1" cy="50.2" r="1.6" fill="#efe3c4" fill-opacity=".16"/><circle cx="70.2" cy="50.2" r="2.05" fill="#f6e7c1"/><circle cx="75.3" cy="50.2" r="1.6" fill="#efe3c4" fill-opacity=".16"/><circle cx="80.4" cy="50.2" r="1.6" fill="#efe3c4" fill-opacity=".16"/><circle cx="39.6" cy="55.6" r="1.6" fill="#efe3c4" fill-opacity=".16"/><circle cx="44.7" cy="55.6" r="1.6" fill="#efe3c4" fill-opacity=".16"/><circle cx="49.8" cy="55.6" r="1.6" fill="#efe3c4" fill-opacity=".16"/><circle cx="54.9" cy="55.6" r="1.6" fill="#efe3c4" fill-opacity=".16"/><circle cx="60.0" cy="55.6" r="1.6" fill="#efe3c4" fill-opacity=".16"/><circle cx="65.1" cy="55.6" r="1.6" fill="#efe3c4" fill-opacity=".16"/><circle cx="70.2" cy="55.6" r="1.6" fill="#efe3c4" fill-opacity=".16"/><circle cx="75.3" cy="55.6" r="2.05" fill="#f6e7c1"/><circle cx="80.4" cy="55.6" r="1.6" fill="#efe3c4" fill-opacity=".16"/><circle cx="39.6" cy="61.0" r="2.05" fill="#f6e7c1"/><circle cx="44.7" cy="61.0" r="2.05" fill="#f6e7c1"/><circle cx="49.8" cy="61.0" r="2.05" fill="#f6e7c1"/><circle cx="54.9" cy="61.0" r="2.05" fill="#f6e7c1"/><circle cx="60.0" cy="61.0" r="2.05" fill="#f6e7c1"/><circle cx="65.1" cy="61.0" r="2.05" fill="#f6e7c1"/><circle cx="70.2" cy="61.0" r="2.05" fill="#f6e7c1"/><circle cx="75.3" cy="61.0" r="2.05" fill="#f6e7c1"/><circle cx="80.4" cy="61.0" r="2.05" fill="#f6e7c1"/><circle cx="39.6" cy="66.4" r="1.6" fill="#efe3c4" fill-opacity=".16"/><circle cx="44.7" cy="66.4" r="1.6" fill="#efe3c4" fill-opacity=".16"/><circle cx="49.8" cy="66.4" r="1.6" fill="#efe3c4" fill-opacity=".16"/><circle cx="54.9" cy="66.4" r="1.6" fill="#efe3c4" fill-opacity=".16"/><circle cx="60.0" cy="66.4" r="1.6" fill="#efe3c4" fill-opacity=".16"/><circle cx="65.1" cy="66.4" r="1.6" fill="#efe3c4" fill-opacity=".16"/><circle cx="70.2" cy="66.4" r="1.6" fill="#efe3c4" fill-opacity=".16"/><circle cx="75.3" cy="66.4" r="2.05" fill="#f6e7c1"/><circle cx="80.4" cy="66.4" r="1.6" fill="#efe3c4" fill-opacity=".16"/><circle cx="39.6" cy="71.8" r="1.6" fill="#efe3c4" fill-opacity=".16"/><circle cx="44.7" cy="71.8" r="1.6" fill="#efe3c4" fill-opacity=".16"/><circle cx="49.8" cy="71.8" r="1.6" fill="#efe3c4" fill-opacity=".16"/><circle cx="54.9" cy="71.8" r="1.6" fill="#efe3c4" fill-opacity=".16"/><circle cx="60.0" cy="71.8" r="1.6" fill="#efe3c4" fill-opacity=".16"/><circle cx="65.1" cy="71.8" r="1.6" fill="#efe3c4" fill-opacity=".16"/><circle cx="70.2" cy="71.8" r="2.05" fill="#f6e7c1"/><circle cx="75.3" cy="71.8" r="1.6" fill="#efe3c4" fill-opacity=".16"/><circle cx="80.4" cy="71.8" r="1.6" fill="#efe3c4" fill-opacity=".16"/>
+            <rect x="57.2" y="76" width="5.6" height="7.5" fill="#c49a5a"/>
+            <rect x="49" y="83" width="22" height="3.6" rx="1.8" fill="#c49a5a"/>
+          </svg>
+            <span class="aug-title" id="t1">모형데모 설계가이드</span>
+            <span class="chips"><span>하드웨어</span><span>설계</span></span>
+            <span class="aug-desc" id="d1">센서 유닛(<em class="hl-teal nw">ESP32 + LD2450</em>)이 보행자를 감지하면 LED 유닛(<em class="hl-teal nw">ESP32 + P10 LED</em>)에 <em class="hl-red">우회전 불가</em>를 띄우는 탁상 모형 설계서예요. 부품, 배치, 판단 규칙, 측정 방법까지 담았어요.</span>
+          </span></span>
+        </a>
+        <span class="key" aria-hidden="true" title="키보드 2">2</span>
+      </div>
+      <div class="slot" style="--i:2">
+        <a class="aug" href="RightGuard_Metaverse.html#sandbox" target="_blank" rel="noopener noreferrer" aria-labelledby="t2" aria-describedby="d2" data-key="3">
+          <span class="aug-frame"><span class="aug-face">
+            <span class="aug-line" aria-hidden="true"></span>
+            <svg class="medal" viewBox="0 0 120 120" aria-hidden="true" focusable="false">
+            <path class="medal-ticks" d="M111.00 60.00L118.00 60.00M109.26 73.20L114.57 74.62M104.17 85.50L110.23 89.00M96.06 96.06L99.95 99.95M85.50 104.17L89.00 110.23M73.20 109.26L74.62 114.57M60.00 111.00L60.00 118.00M46.80 109.26L45.38 114.57M34.50 104.17L31.00 110.23M23.94 96.06L20.05 99.95M15.83 85.50L9.77 89.00M10.74 73.20L5.43 74.62M9.00 60.00L2.00 60.00M10.74 46.80L5.43 45.38M15.83 34.50L9.77 31.00M23.94 23.94L20.05 20.05M34.50 15.83L31.00 9.77M46.80 10.74L45.38 5.43M60.00 9.00L60.00 2.00M73.20 10.74L74.62 5.43M85.50 15.83L89.00 9.77M96.06 23.94L99.95 20.05M104.17 34.50L110.23 31.00M109.26 46.80L114.57 45.38"/>
+            <circle cx="60" cy="60" r="47" fill="url(#rg-medal)" stroke="url(#rg-gold)" stroke-width="3"/>
+            <circle cx="60" cy="60" r="40.5" fill="none" stroke="#efd9a6" stroke-opacity=".22"/>
+            <path d="M42.91 68.31A14 14 0 0 1 53.86 80.05" fill="none" stroke="#efe3c4" stroke-width="3" stroke-linecap="round"/>
+            <path d="M45.20 57.55A25 25 0 0 1 64.76 78.52" fill="none" stroke="#efe3c4" stroke-opacity=".72" stroke-width="3" stroke-linecap="round"/>
+            <path d="M47.48 46.79A36 36 0 0 1 75.65 76.99" fill="none" stroke="#efe3c4" stroke-opacity=".42" stroke-width="3" stroke-linecap="round"/>
+            <circle cx="40" cy="82" r="5.2" fill="#c49a5a"/>
+            <circle cx="79" cy="45" r="4.3" fill="#f6e7c1"/>
+            <path d="M78.2 51.5l-1.6 11.5M77 63l-5 9.5M77 63l5.8 8.4M71.6 56.8l13.2-1.4" fill="none" stroke="#f6e7c1" stroke-width="3.4" stroke-linecap="round" stroke-linejoin="round"/>
+          </svg>
+            <span class="aug-title" id="t2">직접 조작 시연</span>
+            <span class="chips"><span>3D 메타버스</span><span>장치 연동</span></span>
+            <span class="aug-desc" id="d2">보문역 사거리 3D 메타버스의 <em class="hl-gold">관제 화면</em>이 열려요. 보행자를 보내고 센서 범위와 걸음 속도를 바꿔 가며 Right Guard의 판단을 직접 확인해요. 실제 LED 장치와 <em class="hl-teal">USB</em>로 연결할 수도 있어요.</span>
+          </span></span>
+        </a>
+        <span class="key" aria-hidden="true" title="키보드 3">3</span>
+      </div>
+  </main>
+
+  <p class="slogan"><b>Right Turn, Right Time:</b> 보행자 보호 중심의 교통안전 체계 제안</p>
+
+  <script>
+    // 키보드 1·2·3으로 카드 열기
+    document.addEventListener('keydown', function (e) {
+      if (e.altKey || e.ctrlKey || e.metaKey || e.repeat) return;
+      var a = document.querySelector('.aug[data-key="' + e.key + '"]');
+      if (a) a.click();
+    });
+  </script>
 </body>
 </html>
