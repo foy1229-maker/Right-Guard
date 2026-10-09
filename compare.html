@@ -1,0 +1,749 @@
+<!doctype html>
+<html lang="ko">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Right Guard · 효과 비교</title>
+<link rel="icon" href="ku-emblem.webp">
+<link rel="stylesheet" as="style" crossorigin href="https://cdn.jsdelivr.net/gh/orioncactus/pretendard@v1.3.9/dist/web/variable/pretendardvariable.min.css">
+<style>
+:root {
+  --abyss: #05080b;
+  --face-top: #12303a;
+  --face: #0b1a20;
+  --face-deep: #071014;
+  --panel: rgba(11, 26, 32, .82);
+  --line: rgba(239, 217, 166, .14);
+  --gold: #c49a5a;
+  --gold-hi: #e9c983;
+  --cr-hi: #c93a56;
+  --cr: #a01334;
+  --cr-mid: #880024;
+  --cr-lo: #4a0011;
+  --ivory: #efe6d2;
+  --body: #b9b2a3;
+  --muted: #8e887b;
+  --teal: #73d2de;
+  --go: #3fd68a;
+  --stop: #ff6b5b;
+  --amber: #f4b942;
+  --none: #9aa3a8;
+}
+* { box-sizing: border-box; }
+html { -webkit-text-size-adjust: 100%; }
+body {
+  margin: 0;
+  color: var(--ivory);
+  background: var(--abyss);
+  font-family: "Pretendard Variable", Pretendard, -apple-system, BlinkMacSystemFont, "Apple SD Gothic Neo", "Noto Sans KR", sans-serif;
+  -webkit-font-smoothing: antialiased;
+  word-break: keep-all;
+  overflow-x: hidden;
+}
+body::before {
+  content: "";
+  position: fixed;
+  inset: 0;
+  z-index: -1;
+  background:
+    radial-gradient(70% 50% at 50% 30%, rgba(10, 30, 38, .55) 0%, rgba(5, 8, 11, 0) 70%),
+    linear-gradient(rgba(5, 8, 11, .78), rgba(5, 8, 11, .9)),
+    url('ku_image.webp?v=3') center / cover no-repeat;
+}
+a { color: var(--teal); }
+.wrap { width: min(1360px, 100%); margin: 0 auto; padding: 0 20px; }
+.nw { white-space: nowrap; }
+
+/* ── 머리말 */
+.top { display: flex; align-items: center; justify-content: space-between; gap: 16px; padding: 22px 0 14px; }
+.brand { display: flex; align-items: center; gap: 14px; min-width: 0; }
+.brand img { width: 40px; height: auto; filter: drop-shadow(0 4px 10px rgba(0,0,0,.5)); }
+.brand h1 { margin: 0; font-size: 26px; line-height: 1.15; font-weight: 800; letter-spacing: -0.015em; }
+.brand h1 b { color: var(--cr-hi); font-weight: 800; }
+.brand p { margin: 4px 0 0; font-size: 13.5px; color: var(--body); }
+.back { flex: none; font-size: 13px; font-weight: 600; color: var(--body); text-decoration: none; padding: 8px 12px; border-radius: 8px; border: 1px solid var(--line); background: rgba(11,26,32,.6); }
+.back:hover { color: var(--ivory); border-color: rgba(201, 58, 86, .6); }
+
+/* ── 조작 막대 */
+.controls { display: flex; flex-wrap: wrap; align-items: center; gap: 8px 10px; padding: 10px 12px; border-radius: 12px; background: var(--panel); border: 1px solid var(--line); }
+.controls .grp { display: flex; align-items: center; gap: 6px; }
+.controls .lab { font-size: 12px; color: var(--muted); margin-right: 2px; }
+.btn, .seg button, select {
+  font: inherit; font-size: 13px; font-weight: 600; color: var(--ivory);
+  background: #13252c; border: 1px solid rgba(239, 217, 166, .16); border-radius: 8px;
+  padding: 7px 11px; cursor: pointer; line-height: 1.1;
+}
+.btn:hover, .seg button:hover, select:hover { border-color: rgba(201, 58, 86, .7); }
+.btn:focus-visible, .seg button:focus-visible, select:focus-visible, input:focus-visible { outline: 2px solid var(--teal); outline-offset: 2px; }
+.btn.primary { background: linear-gradient(180deg, var(--cr) 0%, var(--cr-mid) 100%); border-color: var(--cr-hi); }
+.btn[disabled] { opacity: .45; cursor: default; }
+.seg { display: inline-flex; border-radius: 8px; overflow: hidden; border: 1px solid rgba(239, 217, 166, .16); }
+.seg button { border: 0; border-radius: 0; background: #13252c; padding: 7px 10px; }
+.seg button + button { border-left: 1px solid rgba(239, 217, 166, .12); }
+.seg button[aria-pressed="true"] { background: var(--cr-mid); color: #fff; }
+select { padding-right: 26px; appearance: none; background-image: linear-gradient(45deg, transparent 50%, var(--body) 50%), linear-gradient(135deg, var(--body) 50%, transparent 50%); background-position: calc(100% - 14px) 50%, calc(100% - 9px) 50%; background-size: 5px 5px; background-repeat: no-repeat; }
+.clock { margin-left: auto; font-size: 13px; color: var(--body); font-variant-numeric: tabular-nums; display: flex; align-items: center; gap: 10px; }
+.clock b { color: var(--ivory); font-weight: 700; }
+.sig { display: inline-flex; align-items: center; gap: 5px; }
+.sig i { width: 9px; height: 9px; border-radius: 50%; background: var(--none); box-shadow: 0 0 6px currentColor; }
+.sig i.g { background: var(--go); color: var(--go); }
+.sig i.y { background: var(--amber); color: var(--amber); }
+.sig i.r { background: var(--stop); color: var(--stop); }
+
+/* ── 두 칸 */
+.panes { display: grid; grid-template-columns: 1fr 1fr; gap: 16px; margin-top: 14px; }
+.pane { --cut: 14px; position: relative; margin: 0; padding: 4px; clip-path: polygon(var(--cut) 0, calc(100% - var(--cut)) 0, 100% var(--cut), 100% calc(100% - var(--cut)), calc(100% - var(--cut)) 100%, var(--cut) 100%, 0 calc(100% - var(--cut)), 0 var(--cut)); background: linear-gradient(158deg, #59656b 0%, #2a3236 45%, #4a5459 100%); }
+.pane.dev { background: linear-gradient(158deg, var(--cr-hi) 0%, var(--cr) 18%, var(--cr-lo) 46%, var(--cr-mid) 66%, var(--cr-hi) 100%); }
+.pane .view { position: relative; aspect-ratio: 16 / 10; clip-path: polygon(11px 0, calc(100% - 11px) 0, 100% 11px, 100% calc(100% - 11px), calc(100% - 11px) 100%, 11px 100%, 0 calc(100% - 11px), 0 11px); background: #0d0a0b; overflow: hidden; }
+.pane iframe { position: absolute; inset: 0; width: 100%; height: 100%; border: 0; display: block; }
+.ph { position: absolute; inset: 0; pointer-events: none; }
+.tag { position: absolute; left: 12px; top: 10px; display: flex; flex-direction: column; gap: 2px; padding: 7px 11px 8px; border-radius: 8px; background: rgba(8, 14, 17, .78); border: 1px solid var(--line); backdrop-filter: blur(4px); }
+.tag b { font-size: 15px; font-weight: 800; letter-spacing: -0.01em; }
+.tag span { font-size: 11.5px; color: var(--body); }
+.pane.dev .tag b { color: #ffd0d8; }
+.led { position: absolute; right: 12px; top: 10px; display: flex; align-items: center; gap: 8px; padding: 6px 10px; border-radius: 8px; background: rgba(8, 14, 17, .78); border: 1px solid var(--line); font-size: 12.5px; font-weight: 700; }
+.led .face { width: 34px; height: 22px; border-radius: 4px; background: #0b0d0f; display: grid; place-items: center; font-size: 16px; line-height: 1; border: 1px solid rgba(255,255,255,.08); }
+.led.go .face { color: var(--go); text-shadow: 0 0 8px var(--go); }
+.led.stop .face { color: var(--stop); text-shadow: 0 0 8px var(--stop); }
+.led.none { color: var(--muted); font-weight: 600; }
+.mini { position: absolute; left: 10px; right: 10px; bottom: 10px; display: grid; grid-template-columns: repeat(3, 1fr); gap: 6px; }
+.mini div { display: flex; align-items: baseline; justify-content: space-between; gap: 6px; padding: 5px 9px 6px; border-radius: 8px; background: rgba(8, 14, 17, .74); border: 1px solid var(--line); }
+.mini small { font-size: 11.5px; color: var(--body); white-space: nowrap; }
+.mini b { font-size: 17px; font-weight: 800; font-variant-numeric: tabular-nums; }
+.mini b.bad { color: var(--stop); }
+.toast { position: absolute; left: 50%; top: 42%; transform: translate(-50%, -50%) scale(.92); opacity: 0; transition: opacity .2s, transform .2s; padding: 10px 16px 11px; border-radius: 12px; text-align: center; max-width: calc(100% - 40px); }
+.toast.show { opacity: 1; transform: translate(-50%, -50%) scale(1); }
+.toast b { display: block; font-size: clamp(17px, 2.1vw, 24px); font-weight: 800; letter-spacing: -0.01em; }
+.toast span { display: block; margin-top: 3px; font-size: 12.5px; color: rgba(255,255,255,.9); }
+.toast.crash { background: rgba(150, 10, 18, .93); box-shadow: 0 10px 40px rgba(226,58,46,.5); border: 1px solid #ff8a7d; }
+.toast.near { background: rgba(170, 30, 22, .9); }
+.toast.warn { background: rgba(115, 78, 8, .92); }
+.toast.ok { background: rgba(12, 82, 48, .9); top: auto; bottom: 64px; transform: translate(-50%, 0) scale(.92); }
+.toast.ok.show { transform: translate(-50%, 0) scale(1); }
+.toast.ok b { font-size: 15px; }
+.cover { position: absolute; inset: 0; display: grid; place-items: center; background: rgba(5, 8, 11, .72); font-size: 14px; color: var(--body); text-align: center; padding: 20px; }
+.cover[hidden] { display: none; }
+.cover b { display: block; color: var(--ivory); font-size: 16px; margin-bottom: 6px; }
+.bar { width: min(240px, 70%); height: 6px; margin: 10px auto 0; border-radius: 3px; background: rgba(255,255,255,.12); overflow: hidden; }
+.bar i { display: block; height: 100%; width: 0; background: linear-gradient(90deg, var(--cr), var(--cr-hi)); transition: width .2s; }
+.recent { margin: 4px 0 0; padding: 7px 12px 8px; font-size: 12.5px; color: var(--body); min-height: 2.4em; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; background: rgba(6, 11, 14, .94); border-radius: 0 0 10px 10px; }
+.recent em { font-style: normal; font-weight: 700; }
+.recent em.bad { color: var(--stop); }
+.recent em.warn { color: var(--amber); }
+.recent em.ok { color: var(--go); }
+
+/* ── 지표 비교 */
+section.card { margin-top: 22px; padding: 20px 22px 22px; border-radius: 14px; background: var(--panel); border: 1px solid var(--line); }
+section.card h2 { margin: 0; font-size: 19px; font-weight: 800; letter-spacing: -0.01em; display: flex; flex-wrap: wrap; align-items: baseline; gap: 6px 12px; }
+section.card h2 small { font-size: 13px; font-weight: 500; color: var(--body); }
+.lead { margin: 8px 0 0; font-size: 14px; color: var(--body); line-height: 1.6; }
+.kgrid { margin-top: 14px; display: grid; grid-template-columns: minmax(220px, 1.25fr) 1fr 1fr minmax(92px, .5fr); }
+.kgrid > div { padding: 12px 10px; border-top: 1px solid var(--line); display: flex; flex-direction: column; justify-content: center; }
+.kgrid .hd { border-top: 0; padding-top: 4px; padding-bottom: 8px; font-size: 12.5px; font-weight: 700; color: var(--muted); letter-spacing: .02em; }
+.kgrid .hd.a { color: #c8d0d3; }
+.kgrid .hd.b { color: #ffc2cc; }
+.kname b { font-size: 15px; font-weight: 700; }
+.kname small { display: block; margin-top: 3px; font-size: 12px; color: var(--muted); line-height: 1.45; }
+.kname .tgt { display: inline-block; margin-top: 5px; font-size: 11.5px; font-weight: 700; color: var(--gold-hi); }
+.kv { gap: 5px; }
+.kv .num { font-size: 22px; font-weight: 800; font-variant-numeric: tabular-nums; letter-spacing: -0.01em; }
+.kv .num small { font-size: 12px; font-weight: 600; color: var(--muted); margin-left: 4px; }
+.kv .meter { height: 6px; border-radius: 3px; background: rgba(255,255,255,.08); overflow: hidden; }
+.kv .meter i { display: block; height: 100%; width: 0; border-radius: 3px; transition: width .4s; }
+.kv.a .meter i { background: #8f9aa0; }
+.kv.b .meter i { background: linear-gradient(90deg, var(--cr), var(--cr-hi)); }
+.kv .na { font-size: 13px; color: var(--muted); }
+.kd { font-size: 15px; font-weight: 800; font-variant-numeric: tabular-nums; align-items: flex-start; }
+.kd.good { color: var(--go); }
+.kd.bad { color: var(--stop); }
+.kd.flat { color: var(--muted); font-weight: 600; font-size: 13px; }
+.kd small { display: block; font-size: 11px; font-weight: 600; color: var(--muted); margin-top: 2px; }
+.ksec { grid-column: 1 / -1; padding: 16px 10px 4px !important; border-top: 0 !important; font-size: 12.5px; font-weight: 800; letter-spacing: .08em; color: var(--gold); }
+.note { margin-top: 12px; font-size: 12.5px; color: var(--muted); line-height: 1.55; }
+
+/* ── 가정 */
+.assume { display: grid; grid-template-columns: repeat(3, 1fr); gap: 14px; margin-top: 14px; }
+.as { padding: 14px; border-radius: 10px; background: rgba(5, 12, 15, .55); border: 1px solid var(--line); }
+.as label { display: flex; justify-content: space-between; align-items: baseline; gap: 8px; font-size: 14px; font-weight: 700; }
+.as output { font-size: 18px; font-weight: 800; color: var(--gold-hi); font-variant-numeric: tabular-nums; }
+.as input[type=range] { width: 100%; margin: 10px 0 6px; accent-color: var(--cr-hi); }
+.as p { margin: 0; font-size: 12.5px; color: var(--muted); line-height: 1.5; }
+.as-actions { display: flex; flex-wrap: wrap; align-items: center; gap: 10px; margin-top: 14px; }
+.as-actions span { font-size: 12.5px; color: var(--muted); }
+
+/* ── 미리 돌려 본 결과 */
+.ref { width: 100%; margin-top: 14px; border-collapse: collapse; font-size: 13.5px; font-variant-numeric: tabular-nums; }
+.ref th, .ref td { padding: 9px 10px; border-top: 1px solid var(--line); text-align: right; }
+.ref th:first-child, .ref td:first-child { text-align: left; }
+.ref thead th { border-top: 0; font-size: 12px; color: var(--muted); font-weight: 700; vertical-align: bottom; }
+.ref thead th.s { text-align: center; color: var(--gold-hi); border-bottom: 1px solid var(--line); }
+.ref td.a { color: #c8d0d3; }
+.ref td.b { color: #ffd3da; font-weight: 700; }
+.ref td.sep, .ref th.sep { border-left: 1px solid var(--line); }
+.scroll { overflow-x: auto; -webkit-overflow-scrolling: touch; }
+
+/* ── 방법 */
+.method { display: grid; grid-template-columns: 1fr 1fr; gap: 10px 28px; margin-top: 12px; }
+.method dl { margin: 0; }
+.method dt { margin-top: 12px; font-size: 14px; font-weight: 700; color: var(--ivory); }
+.method dd { margin: 4px 0 0; font-size: 13px; color: var(--body); line-height: 1.6; }
+.limits { margin: 14px 0 0; padding-left: 18px; font-size: 13px; color: var(--body); line-height: 1.65; }
+footer { margin: 24px 0 32px; font-size: 12px; color: var(--muted); line-height: 1.7; }
+footer a { color: var(--body); }
+
+@media (max-width: 1080px) {
+  .clock { margin-left: 0; width: 100%; }
+}
+@media (max-width: 900px) {
+  .panes { grid-template-columns: 1fr; }
+  .assume { grid-template-columns: 1fr; }
+  .method { grid-template-columns: 1fr; }
+}
+@media (max-width: 640px) {
+  .wrap { padding: 0 16px; }
+  .top { flex-direction: column-reverse; align-items: flex-start; gap: 10px; padding-top: 16px; }
+  .brand h1 { font-size: 21px; }
+  .brand p { font-size: 12.5px; }
+  .brand img { width: 34px; }
+  .controls { padding: 10px; gap: 8px; }
+  .controls .grp { flex-wrap: wrap; }
+  .mini { left: 8px; right: 8px; bottom: 8px; gap: 5px; }
+  .mini div { flex-direction: column; align-items: flex-start; gap: 0; padding: 4px 7px 5px; }
+  .mini b { font-size: 15px; }
+  .mini small { font-size: 10.5px; }
+  .tag b { font-size: 13.5px; }
+  .tag span { display: none; }
+  .led { padding: 5px 8px; font-size: 11.5px; }
+  .kgrid { grid-template-columns: 1fr 1fr; }
+  .kgrid .hd.k, .kgrid .hd.d { display: none; }
+  .kgrid .kname { grid-column: 1 / -1; padding-bottom: 2px; }
+  .kgrid .kv { border-top: 0; padding-top: 4px; }
+  .kgrid .kd { grid-column: 1 / -1; border-top: 0; padding-top: 0; flex-direction: row; gap: 8px; align-items: baseline; }
+  .kgrid .kd small { margin-top: 0; }
+  .kv .num { font-size: 19px; }
+  section.card { padding: 16px; }
+}
+@media (prefers-reduced-motion: reduce) {
+  .toast, .bar i, .kv .meter i { transition: none; }
+}
+</style>
+</head>
+<body>
+<div class="wrap">
+  <header class="top">
+    <div class="brand">
+      <img src="ku-emblem.webp" alt="고려대학교 엠블럼" width="164" height="220">
+      <div>
+        <h1><b>Right Guard</b> 있을 때 vs 없을 때</h1>
+        <p>같은 보문역 사거리, 같은 사람과 차. 장치만 다릅니다.</p>
+      </div>
+    </div>
+    <a class="back" href="index.html">대시보드로</a>
+  </header>
+
+  <div class="controls" role="toolbar" aria-label="비교 조작">
+    <button class="btn primary" id="play" aria-pressed="true">일시정지</button>
+    <div class="grp"><span class="lab">속도</span>
+      <div class="seg" id="speed"><button data-v="1" aria-pressed="true">×1</button><button data-v="2" aria-pressed="false">×2</button><button data-v="4" aria-pressed="false">×4</button><button data-v="8" aria-pressed="false">×8</button></div>
+    </div>
+    <div class="grp"><span class="lab">상황</span>
+      <select id="scn" aria-label="상황">
+        <option value="normal">평상시 낮</option>
+        <option value="rush">출퇴근 (보행자 많음)</option>
+        <option value="school">하교 시간 (아이 많음)</option>
+      </select>
+    </div>
+    <div class="grp"><span class="lab">시점</span>
+      <div class="seg" id="view"><button data-v="corner" aria-pressed="true">모퉁이</button><button data-v="driver" aria-pressed="false">운전자</button><button data-v="top" aria-pressed="false">위에서</button></div>
+    </div>
+    <button class="btn" id="ff">10분 빠르게</button>
+    <button class="btn" id="again">다른 장면</button>
+    <div class="clock"><span>장면 <b id="seedL">#7</b></span><span>시뮬레이션 <b id="clock">00:00</b></span><span class="sig"><i id="sigV"></i>보문로 북행</span><span class="sig"><i id="sigP"></i>횡단보도</span></div>
+  </div>
+
+  <div class="panes">
+    <figure class="pane" id="paneA">
+      <div class="view">
+        <iframe id="fA" title="장치 없는 보문역 사거리" loading="eager"></iframe>
+        <div class="ph">
+          <div class="tag"><b>장치 없음</b><span>지금의 보문역 사거리</span></div>
+          <div class="led none" id="ledA">LED 없음</div>
+          <div class="mini">
+            <div><small>일시정지 이행</small><b id="mA1">–</b></div>
+            <div><small>가까이 스침</small><b id="mA2">0</b></div>
+            <div><small>아찔한 순간</small><b id="mA3">0</b></div>
+          </div>
+          <div class="toast" id="tA"><b></b><span></span></div>
+          <div class="toast ok" id="oA"><b></b></div>
+          <div class="cover" id="cA"><div><b>교차로를 짓는 중…</b><span class="cov-t">잠시만 기다려 주세요</span><div class="bar"><i></i></div></div></div>
+        </div>
+      </div>
+      <p class="recent" id="rA" aria-live="polite">아직 일어난 일이 없어요</p>
+    </figure>
+    <figure class="pane dev" id="paneB">
+      <div class="view">
+        <iframe id="fB" title="Right Guard를 설치한 보문역 사거리" loading="eager"></iframe>
+        <div class="ph">
+          <div class="tag"><b>Right Guard 설치</b><span>모퉁이 레이더 + LED</span></div>
+          <div class="led go" id="ledB"><span class="face">→</span><span class="lt">우회전 가능</span></div>
+          <div class="mini">
+            <div><small>일시정지 이행</small><b id="mB1">–</b></div>
+            <div><small>가까이 스침</small><b id="mB2">0</b></div>
+            <div><small>아찔한 순간</small><b id="mB3">0</b></div>
+          </div>
+          <div class="toast" id="tB"><b></b><span></span></div>
+          <div class="toast ok" id="oB"><b></b></div>
+          <div class="cover" id="cB"><div><b>교차로를 짓는 중…</b><span class="cov-t">잠시만 기다려 주세요</span><div class="bar"><i></i></div></div></div>
+        </div>
+      </div>
+      <p class="recent" id="rB" aria-live="polite">아직 일어난 일이 없어요</p>
+    </figure>
+  </div>
+
+  <section class="card" aria-labelledby="hK">
+    <h2 id="hK">지금까지 비교 <small id="kSub">시뮬레이션을 준비하는 중…</small></h2>
+    <p class="lead">왼쪽과 오른쪽에는 같은 순서로 같은 사람과 차가 들어옵니다. 운전자 한 명 한 명의 성향(반응 속도, 스스로 멈추는지, ✕를 따르는지)도 양쪽이 똑같고, 다른 것은 Right Guard뿐이에요. 표본이 적을 때는 수치가 크게 흔들리니 <b>10분 빠르게</b>로 시간을 늘려 보세요.</p>
+    <div class="kgrid" id="kgrid" role="table" aria-label="지표 비교"></div>
+    <p class="note" id="kNote"></p>
+  </section>
+
+  <section class="card" aria-labelledby="hA">
+    <h2 id="hA">운전자 행동 가정 <small>바꾸면 두 세계가 같은 장면으로 처음부터 다시 시작해요</small></h2>
+    <div class="assume">
+      <div class="as">
+        <label for="aSelf">장치 없이도 스스로 멈추는 운전자 <output id="oSelf">10%</output></label>
+        <input type="range" id="aSelf" min="0" max="100" step="5" value="10">
+        <p>건너려는 사람을 보고 스스로 일시정지하는 비율. 기본값은 우회전 신호등이 없는 교차로에서 관찰된 일시정지 준수율 10.3% (경북, 2023 시범운영). 100%로 두면 '모두가 법을 지킬 때'와 비교할 수 있어요.</p>
+      </div>
+      <div class="as">
+        <label for="aObey">✕를 보면 멈추는 운전자 <output id="oObey">80%</output></label>
+        <input type="range" id="aObey" min="30" max="100" step="5" value="80">
+        <p>LED ✕를 보고 횡단보도 앞에서 멈추는 비율. 기본값은 미국 FHWA의 보행자 경고등(RRFB) 연구에서 설치 뒤 운전자 양보율이 약 80%였던 결과.</p>
+      </div>
+      <div class="as">
+        <label for="aPrt">보행자를 알아채는 시간 <output id="oPrt">1.3초</output></label>
+        <input type="range" id="aPrt" min="0.8" max="2.5" step="0.1" value="1.3">
+        <p>운전자 눈에 보이기 시작한 뒤 반응하기까지 걸리는 시간의 가운데 값. 사람마다 다르게 뽑고, 공사장 가림막에 가려 있는 동안은 보지 못해요. ✕가 켜져 있으면 오른쪽을 더 살펴 0.6배로 짧아져요.</p>
+      </div>
+    </div>
+    <div class="as-actions"><button class="btn primary" id="apply">적용하고 처음부터</button><button class="btn" id="resetA">기본값</button><span id="aMsg"></span></div>
+  </section>
+
+  <section class="card" aria-labelledby="hR">
+    <h2 id="hR">미리 돌려 본 결과 <small id="refSub"></small></h2>
+    <p class="lead">위 기본 가정으로 상황마다 여러 장면을 길게 돌려 합친 값이에요. 직접 보는 화면보다 표본이 훨씬 커서 흔들림이 적습니다.</p>
+    <div class="scroll"><table class="ref" id="refTable"></table></div>
+    <p class="note" id="refNote"></p>
+  </section>
+
+  <section class="card" aria-labelledby="hM">
+    <h2 id="hM">어떻게 셌나요</h2>
+    <div class="method">
+      <dl>
+        <dt>일시정지 이행률</dt>
+        <dd>신설동 쪽에서 올라와 고려대 방향으로 우회전하는 차 중, 아직 편안히 멈출 수 있는 거리(감속 4.5 m/s² 이하)에서 <b>보행자가 건너고 있거나 건너려 한</b> 차가 대상이에요. 건너는 사람은 6초 안에 차가 지나갈 자리에 들어오는 경우, 건너려는 사람은 보행 신호 녹색에 공사장 쪽 연석 앞에 선 경우예요. 이 중 횡단보도 바로 앞(2.5 m 안)에서 완전히 멈춘(시속 1 km 미만) 차의 비율이에요. 빨간불 대기나 줄 서기로 멈춘 것은 세지 않고, 줄 서 있는 뒤차는 맨 앞이 된 뒤부터 봐요.</dd>
+        <dt>가까이 스침 · 아찔한 순간 · 충돌 직전</dt>
+        <dd>가까이 스침은 차가 시속 7 km 넘게 움직이는 채로 횡단보도 위 보행자의 2 m 앞까지 다가간 경우예요. 아찔한 순간은 알아챈 보행자 때문에 4.2 m/s²보다 세게 급정거한 경우예요. 충돌 직전은 운전자가 보행자를 알아채지 못한 채 다가가, 시뮬레이션이 사람과 겹치지 않도록 차를 강제로 세운 경우예요(시속 3.6 km 이상). 실제 도로였다면 부딪혔을 상황이에요.</dd>
+        <dt>보행자가 차를 먼저 보낸 비율</dt>
+        <dd>차가 지나가는 자리에 들어선 보행자 중, 멈추지 않고 오는 차 때문에 연석에서 기다려야 했던 사람의 비율이에요.</dd>
+      </dl>
+      <dl>
+        <dt>건너려는 보행자 감지 성공률 (장치)</dt>
+        <dd>보행자가 차가 지나가는 자리(고려대로 동쪽 횡단보도의 바깥 차로 구간)에 들어서는 순간, 레이더가 그 사람을 '건너는/건너려는 사람'으로 잡고 있었던 비율이에요. 경고 선행 시간은 그렇게 잡히기 시작한 때부터 그 자리에 들어설 때까지예요.</dd>
+        <dt>오감지율 (장치)</dt>
+        <dd>LED ✕가 켜졌다 꺼질 때까지(꺼진 뒤 4초 포함) 실제로 차가 지나가는 자리에 들어선 사람이 한 명도 없었던 ✕의 비율이에요. 모퉁이에서 누군가를 기다리는 사람, 연석까지 뛰어왔다 멈춘 아이 등이 원인이에요.</dd>
+        <dt>우회전 소요 시간</dt>
+        <dd>정지선 40 m 앞에서 횡단보도를 다 지나갈 때까지 걸린 시간의 평균이에요(빨간불 대기 포함). 장치 때문에 흐름이 얼마나 느려지는지 봐요.</dd>
+      </dl>
+    </div>
+    <ul class="limits">
+      <li><b>가정에 기댄 결과예요.</b> 운전자가 얼마나 멈추는지는 위 가정값에서 출발하고, 시뮬레이션은 가림막·반응 시간·레이더 범위·신호를 더해 결과를 냅니다. 실제 효과는 보문역 관찰(before)과 시범 설치(after)로 확인해야 해요.</li>
+      <li>레이더는 LD2450 사양(6 m · ±60° · 최대 3명)대로 보지만, 반사나 차량 오인식 같은 실제 센서의 잡음은 넣지 않았어요. 장치는 보행 신호를 안다고 가정했어요.</li>
+      <li>운전자는 보행자를 알아챈 뒤에도, 그 사람이 차로로 들어오기 시작하면 다시 0.6~1.4초 뒤에 브레이크를 밟아요. 급제동은 최대 7.5 m/s²예요.</li>
+      <li>보행자는 보행 신호를 지키고, 어른의 70%·걷는 아이의 50%는 다가오는 차를 살펴 먼저 보내요. 나머지와 뛰는 아이는 살피지 않고 건너요. 좌회전·유턴·이륜차는 없어요.</li>
+    </ul>
+  </section>
+
+  <footer>
+    근거 · 일시정지 준수율 10.3% → 우회전 신호등 설치 후 89.7%: <a href="https://www.kbmaeil.com/article/202304120359611" target="_blank" rel="noopener">경북매일 (2023-04-12)</a> ·
+    보행자 경고등(RRFB) 설치 후 운전자 양보율 약 80%: <a href="https://www.fhwa.dot.gov/publications/research/safety/pedbike/10043/005.cfm" target="_blank" rel="noopener">FHWA-HRT-10-043</a> ·
+    '통행하려고 하는 때' 일시정지: <a href="https://mediahub.seoul.go.kr/archives/2003631" target="_blank" rel="noopener">서울시 미디어허브</a><br>
+    시뮬레이션: Right Guard 메타버스(보문역 사거리) 비교 모드 · Team Right Guard · 고려대학교 KU CreativeX CRP
+  </footer>
+</div>
+
+<script>
+'use strict';
+const REF = {"date":"2026-10-10","scenarios":[{"key":"normal","name":"평상시 낮","A":{"turns":854,"required":304,"complied":194,"reqIntent":62,"compIntent":5,"close":7,"near":23,"crash":3,"rgStops":0,"falseStops":0,"pedCross":1178,"pedYieldFail":27,"pedConflict":30,"det":0,"detOk":0,"warnOk":0,"ep":0,"epFalse":0,"min":199.99999999986983,"turnTime":23.46256830599547,"lead":null,"compliance":0.6381578947368421,"complianceIntent":0.08064516129032258,"yieldFailRate":0.022920203735144314,"detRate":null,"warnRate":null,"falseRate":null,"turnsPerHour":256.20000000016677,"range":{"compliance":[0.5522388059701493,0.7222222222222222],"near100":[1.7647058823529411,3.4482758620689653]}},"B":{"turns":844,"required":217,"complied":200,"reqIntent":17,"compIntent":13,"close":2,"near":9,"crash":1,"rgStops":174,"falseStops":7,"pedCross":1179,"pedYieldFail":8,"pedConflict":15,"det":1179,"detOk":930,"warnOk":1178,"ep":358,"epFalse":39,"min":199.99999999986983,"turnTime":34.296958925726734,"lead":0.7378136200712082,"compliance":0.9216589861751152,"complianceIntent":0.7647058823529411,"yieldFailRate":0.006785411365564037,"detRate":0.7888040712468194,"warnRate":0.9991518235793045,"falseRate":0.10893854748603352,"turnsPerHour":253.2000000001648,"range":{"compliance":[0.8837209302325582,0.9534883720930233],"near100":[0.0,1.7341040462427744]}}},{"key":"rush","name":"출퇴근","A":{"turns":708,"required":298,"complied":206,"reqIntent":36,"compIntent":1,"close":8,"near":22,"crash":3,"rgStops":0,"falseStops":0,"pedCross":2035,"pedYieldFail":26,"pedConflict":32,"det":0,"detOk":0,"warnOk":0,"ep":0,"epFalse":0,"min":199.99999999986983,"turnTime":24.67142184555864,"lead":null,"compliance":0.6912751677852349,"complianceIntent":0.027777777777777776,"yieldFailRate":0.012776412776412777,"detRate":null,"warnRate":null,"falseRate":null,"turnsPerHour":212.40000000013825,"range":{"compliance":[0.5967741935483871,0.7586206896551724],"near100":[2.0689655172413794,4.195804195804196]}},"B":{"turns":703,"required":219,"complied":206,"reqIntent":14,"compIntent":12,"close":3,"near":10,"crash":2,"rgStops":174,"falseStops":4,"pedCross":2035,"pedYieldFail":9,"pedConflict":19,"det":2035,"detOk":1171,"warnOk":2035,"ep":289,"epFalse":14,"min":199.99999999986983,"turnTime":35.78055950685116,"lead":0.84514659834845,"compliance":0.9406392694063926,"complianceIntent":0.8571428571428571,"yieldFailRate":0.004422604422604423,"detRate":0.5754299754299754,"warnRate":1.0,"falseRate":0.04844290657439446,"turnsPerHour":210.90000000013725,"range":{"compliance":[0.8958333333333334,0.9772727272727273],"near100":[0.0,4.285714285714286]}}},{"key":"school","name":"하교 시간","A":{"turns":853,"required":309,"complied":203,"reqIntent":53,"compIntent":5,"close":17,"near":38,"crash":6,"rgStops":0,"falseStops":0,"pedCross":1351,"pedYieldFail":27,"pedConflict":46,"det":0,"detOk":0,"warnOk":0,"ep":0,"epFalse":0,"min":199.99999999986983,"turnTime":22.850449394280062,"lead":null,"compliance":0.656957928802589,"complianceIntent":0.09433962264150944,"yieldFailRate":0.01998519615099926,"detRate":null,"warnRate":null,"falseRate":null,"turnsPerHour":255.90000000016656,"range":{"compliance":[0.5797101449275363,0.696969696969697],"near100":[2.976190476190476,6.58682634730539]}},"B":{"turns":847,"required":224,"complied":195,"reqIntent":21,"compIntent":13,"close":3,"near":10,"crash":0,"rgStops":178,"falseStops":10,"pedCross":1351,"pedYieldFail":3,"pedConflict":12,"det":1351,"detOk":1002,"warnOk":1349,"ep":432,"epFalse":108,"min":199.99999999986983,"turnTime":34.514443132602295,"lead":0.7724883566196019,"compliance":0.8705357142857143,"complianceIntent":0.6190476190476191,"yieldFailRate":0.0022205773501110288,"detRate":0.7416728349370837,"warnRate":0.9985196150999259,"falseRate":0.25,"turnsPerHour":254.10000000016538,"range":{"compliance":[0.8181818181818182,0.9090909090909091],"near100":[0.0,1.7857142857142856]}}}],"seeds":5,"minutes":40,"assume":{"pSelf":0.1,"pObey":0.8,"prt":1.3}};
+const META = 'RightGuard_Metaverse.html';
+const H = 1 / 30;
+const $ = (id) => document.getElementById(id);
+const DEF = { pSelf: 0.1, pObey: 0.8, prt: 1.3 };
+const S = {
+  seed: 7, scn: 'normal', assume: { ...DEF }, view: 'corner',
+  speed: 1, playing: true, ready: { A: false, B: false }, busy: false,
+  last: { A: null, B: null }, waitReply: { A: false, B: false }, gen: 0,
+  recent: { A: [], B: [] },
+};
+const PANES = { A: { frame: $('fA'), dev: 0 }, B: { frame: $('fB'), dev: 1 } };
+try {
+  const q = new URLSearchParams(location.search);
+  if (q.has('seed')) S.seed = (+q.get('seed') >>> 0) || 7;
+  if (['normal', 'rush', 'school'].includes(q.get('scn'))) S.scn = q.get('scn');
+} catch (e) { /* ignore */ }
+$('scn').value = S.scn;
+
+function hashFor(dev) {
+  const a = S.assume;
+  return `#compare&id=${dev ? 'B' : 'A'}&rg=${dev}&seed=${S.seed}&scn=${S.scn}&ps=${a.pSelf}&po=${a.pObey}&prt=${a.prt}&view=${S.view}&warm=40&gen=${S.gen}`;
+}
+function cover(k, on, title, sub, pct) {
+  const c = $('c' + k);
+  c.hidden = !on;
+  if (!on) return;
+  c.querySelector('b').textContent = title;
+  c.querySelector('.cov-t').textContent = sub || '';
+  c.querySelector('.bar').style.display = pct == null ? 'none' : '';
+  c.querySelector('.bar i').style.width = `${Math.round((pct || 0) * 100)}%`;
+}
+const cfgFor = (dev) => ({ seed: S.seed, scn: S.scn, assume: S.assume, device: dev, warm: 40, view: S.view, gen: S.gen });
+function load() {
+  S.gen++;
+  $('seedL').textContent = `#${S.seed}`;
+  // 하던 '빠르게 돌리기'는 새 장면에서 취소됨
+  S.busy = false;
+  S.ranDone = 0;
+  $('ff').disabled = false;
+  S.ready.A = S.ready.B = false;
+  S.waitReply.A = S.waitReply.B = false;
+  S.last.A = S.last.B = null;
+  S.recent.A = []; S.recent.B = [];
+  $('rA').textContent = '아직 일어난 일이 없어요'; $('rB').textContent = '아직 일어난 일이 없어요';
+  for (const k of ['A', 'B']) {
+    cover(k, true, '교차로를 짓는 중…', '두 세계를 같은 장면으로 맞추고 있어요');
+    const f = PANES[k].frame;
+    const src = META + hashFor(PANES[k].dev);
+    if (!f.src) f.src = src;
+    else if (f.contentWindow) f.contentWindow.postMessage({ rgc: 'init', cfg: cfgFor(PANES[k].dev) }, '*');
+  }
+  renderK();
+}
+
+function send(k, msg) {
+  const f = PANES[k].frame;
+  if (f.contentWindow) f.contentWindow.postMessage(msg, '*');
+}
+
+window.addEventListener('message', (e) => {
+  const d = e.data;
+  if (!d || typeof d !== 'object' || !d.rgc || (d.id !== 'A' && d.id !== 'B')) return;
+  const k = d.id;
+  if (e.source !== PANES[k].frame.contentWindow) return;
+  // 지난 장면의 답장은 버림. 아직 준비 중이라 새 장면 명령을 놓친 칸에는 다시 보냄
+  if (d.gen !== S.gen) {
+    if (d.rgc === 'ready') send(k, { rgc: 'init', cfg: cfgFor(PANES[k].dev) });
+    return;
+  }
+  if (d.rgc === 'ready') {
+    S.ready[k] = true;
+    cover(k, false);
+    if (S.ready.A && S.ready.B) S.clockStart = performance.now();
+  } else if (d.rgc === 'state') {
+    S.waitReply[k] = false;
+    S.last[k] = d;
+    if (d.ev && d.ev.length) onEvents(k, d.ev);
+    paintPane(k, d);
+  } else if (d.rgc === 'progress') {
+    cover(k, true, '빠르게 돌리는 중…', '그리지 않고 계산만 해요', d.done / d.total);
+  } else if (d.rgc === 'ran') {
+    S.ranDone = (S.ranDone || 0) + 1;
+    cover(k, false);
+    if (S.ranDone >= 2) { S.busy = false; $('ff').disabled = false; }
+  }
+});
+
+// ── 두 칸을 같은 간격으로 한 걸음씩 (두 칸이 모두 답해야 다음 걸음)
+let acc = 0, lastT = performance.now();
+function frame(now) {
+  const dt = Math.min(0.1, Math.max(0, (now - lastT) / 1000));
+  lastT = now;
+  // 답이 2초 넘게 안 오면 (탭 전환 등) 다시 보냄
+  if ((S.waitReply.A || S.waitReply.B) && now - (S.sentAt || 0) > 2000) S.waitReply.A = S.waitReply.B = false;
+  if (S.playing && S.ready.A && S.ready.B && !S.busy && !document.hidden) {
+    acc += dt * S.speed;
+    if (!S.waitReply.A && !S.waitReply.B) {
+      let n = Math.floor(acc / H);
+      if (n > 0) {
+        n = Math.min(n, 4 * S.speed);
+        acc = Math.max(0, acc - n * H);
+        if (acc > 0.5) acc = 0.5;
+        S.waitReply.A = S.waitReply.B = true;
+        S.sentAt = now;
+        send('A', { rgc: 'tick', n });
+        send('B', { rgc: 'tick', n });
+      }
+    }
+  }
+  requestAnimationFrame(frame);
+}
+requestAnimationFrame(frame);
+
+// ── 칸 위 표시
+const pct = (v) => (v == null ? '–' : `${Math.round(v * 100)}%`);
+function paintPane(k, d) {
+  const m = d.m;
+  $(`m${k}1`).textContent = m.required ? `${pct(m.compliance)}` : '–';
+  $(`m${k}2`).textContent = m.close;
+  $(`m${k}3`).textContent = m.near + m.crash;
+  $(`m${k}2`).classList.toggle('bad', m.close > 0);
+  $(`m${k}3`).classList.toggle('bad', m.near + m.crash > 0);
+  if (k === 'B') {
+    const el = $('ledB');
+    const stop = d.led === 'STOP';
+    el.className = `led ${stop ? 'stop' : 'go'}`;
+    el.querySelector('.face').textContent = stop ? '✕' : '→';
+    el.querySelector('.lt').textContent = stop ? '우회전 불가' : '우회전 가능';
+  }
+  if (k === 'A') {
+    const t = Math.max(0, d.t);
+    $('clock').textContent = `${String(Math.floor(t / 60)).padStart(2, '0')}:${String(Math.floor(t % 60)).padStart(2, '0')}`;
+    $('sigV').className = d.sigVeh === 'G' ? 'g' : d.sigVeh === 'Y' ? 'y' : 'r';
+    $('sigP').className = d.sigPed === 'W' ? 'g' : d.sigPed === 'F' ? 'y' : 'r';
+  }
+}
+
+// ── 사건 알림 (중요한 것 먼저)
+const EV = {
+  crash: { pri: 6, cls: 'crash', t: '충돌 직전!', s: (e) => `운전자가 못 보고 다가감 · 실제라면 사고 (시속 ${e.kmh || '?'} km)`, r: '충돌 직전', rc: 'bad' },
+  near: { pri: 5, cls: 'near', t: '아찔한 순간!', s: () => '보행자 앞에서 급정거', r: '아찔한 순간', rc: 'bad' },
+  noyield: { pri: 4, cls: 'warn', t: '일시정지 안 함', s: (e) => (e.kind === 'intent' ? '건너려는 사람 앞을 그냥 지나감' : '건너는 사람 앞을 그냥 지나감'), r: '일시정지 안 함', rc: 'warn' },
+  close: { pri: 3.5, cls: 'warn', t: '가까이 스침', s: () => '보행자 2 m 앞을 멈추지 않고 지나감', r: '가까이 스침', rc: 'warn' },
+  pedwait: { pri: 3, cls: 'warn', t: '보행자가 차를 먼저 보냄', s: (e) => `연석에서 ${e.wait || '?'}초 기다림`, r: '보행자 양보', rc: 'warn' },
+  false: { pri: 2, cls: 'warn', t: '헛경보 ✕', s: (e) => `건너는 사람이 없었어요 (${e.dur}초)`, r: '헛경보', rc: 'warn' },
+  miss: { pri: 2, cls: 'warn', t: '감지 늦음', s: () => '레이더가 미리 잡지 못한 보행자', r: '감지 늦음', rc: 'warn' },
+  yield: { pri: 1, cls: 'ok', t: '일시정지 ✓', s: () => '', r: '일시정지', rc: 'ok' },
+};
+const toastState = { A: { until: 0, pri: 0 }, B: { until: 0, pri: 0 }, okA: 0, okB: 0 };
+function onEvents(k, list) {
+  const now = performance.now();
+  let best = null;
+  for (const e of list) {
+    const d = EV[e.type];
+    if (!d) continue;
+    S.recent[k].push(e);
+    if (d.cls !== 'ok' && (!best || d.pri > EV[best.type].pri)) best = e;
+    if (d.cls === 'ok') showOk(k);
+  }
+  if (S.recent[k].length > 12) S.recent[k].splice(0, S.recent[k].length - 12);
+  renderRecent(k);
+  if (best) {
+    const d = EV[best.type];
+    const ts = toastState[k];
+    if (now > ts.until || d.pri >= ts.pri) {
+      const el = $('t' + k);
+      el.className = `toast ${d.cls} show`;
+      el.querySelector('b').textContent = d.t;
+      el.querySelector('span').textContent = d.s(best);
+      ts.pri = d.pri;
+      ts.until = now + (d.pri >= 5 ? 2300 : 1600) / Math.sqrt(S.speed);
+      clearTimeout(ts.h);
+      ts.h = setTimeout(() => el.classList.remove('show'), ts.until - now);
+    }
+  }
+}
+function showOk(k) {
+  const el = $('o' + k);
+  el.querySelector('b').textContent = '일시정지 ✓';
+  el.classList.add('show');
+  clearTimeout(toastState['ok' + k]);
+  toastState['ok' + k] = setTimeout(() => el.classList.remove('show'), 1100 / Math.sqrt(S.speed));
+}
+function renderRecent(k) {
+  const items = S.recent[k].filter((e) => e.type !== 'yield').slice(-4).reverse();
+  const fmt = (t) => `${String(Math.floor(t / 60)).padStart(2, '0')}:${String(Math.floor(t % 60)).padStart(2, '0')}`;
+  $('r' + k).innerHTML = items.length
+    ? '최근 · ' + items.map((e) => `${fmt(e.t)} <em class="${EV[e.type].rc}">${EV[e.type].r}</em>`).join(' · ')
+    : '아직 일어난 일이 없어요';
+}
+
+// ── 지표 표
+const ROWS = [
+  { sec: '운전자와 보행자' },
+  { k: 'compliance', name: '운전자 일시정지 이행률', sub: '건너거나 건너려는 보행자 앞에서 멈춘 우회전 차', fmt: 'pct', n: (m) => `${m.complied}/${m.required}대`, better: 'up', extra: (m) => (m.reqIntent ? `건너려는 사람 앞: ${pct(m.complianceIntent)} (${m.compIntent}/${m.reqIntent})` : '') },
+  { k: 'yieldFailRate', name: '보행자가 차를 먼저 보낸 비율', sub: '멈추지 않는 차 때문에 연석에서 기다림', fmt: 'pct', n: (m) => `${m.pedYieldFail}/${m.pedCross}명`, better: 'down' },
+  { k: 'close', name: '가까이 스침', sub: '차가 움직이는 채로 횡단보도 위 보행자 2 m 앞까지 다가감', fmt: 'count', n: (m) => `우회전 100대당 ${per100(m, 'close')}`, better: 'down' },
+  { k: 'near', name: '아찔한 순간', sub: '보행자 앞 급정거', fmt: 'count', n: (m) => `우회전 100대당 ${per100(m, 'near')}`, better: 'down' },
+  { k: 'crash', name: '충돌 직전 (실제라면 사고)', sub: '운전자가 못 본 채 다가가 시뮬레이션이 강제로 세움', fmt: 'count', n: (m) => `우회전 100대당 ${per100(m, 'crash')}`, better: 'down' },
+  { sec: '교통 흐름' },
+  { k: 'turnTime', name: '우회전 소요 시간', sub: '정지선 40 m 앞 → 횡단보도 통과 (빨간불 대기 포함)', fmt: 'sec', n: (m) => `${m.turns}대 평균`, better: 'down', tol: 0.03 },
+  { k: 'tph', name: '우회전 처리량', sub: '한 시간에 고려대 방향으로 우회전한 차', fmt: 'rate', n: () => '', better: 'up', tol: 0.04 },
+  { sec: 'Right Guard 장치' },
+  { k: 'detRate', name: '건너려는 보행자 감지 성공률', sub: '차가 지나는 자리에 들어서기 전에 레이더가 그 사람을 잡음 (최대 3명 추적)', fmt: 'pct', n: (m) => `${m.detOk}/${m.det}명`, dev: true, target: '목표 95% 이상', tgt: (v) => v >= 0.95 },
+  { k: 'warnRate', name: '그때 ✕가 켜져 있던 비율', sub: '누구 때문이든 운전자에게 경고가 보였는가', fmt: 'pct', n: (m) => `${m.warnOk}/${m.det}명`, dev: true },
+  { k: 'lead', name: '경고 선행 시간', sub: '잡히기 시작해서 그 자리에 들어설 때까지 (평균)', fmt: 'sec1', n: (m) => (m.det ? `1초 이상 ${pct(m.lead1Rate)}` : ''), dev: true },
+  { k: 'falseRate', name: '오감지율', sub: '건너는 사람 없이 켜진 ✕의 비율', fmt: 'pct', n: (m) => `${m.epFalse}/${m.ep}회`, dev: true, target: '목표 5% 이하', tgt: (v) => v <= 0.05 },
+  { k: 'falseStops', name: '헛정지', sub: '멈출 필요가 없는데 ✕ 때문에 멈춘 차', fmt: 'count', n: (m) => `✕로 멈춘 차 ${m.rgStops}대 중`, dev: true },
+];
+function per100(m, k) {
+  return m.turns ? (m[k] / m.turns * 100).toFixed(1) : '–';
+}
+function withDerived(m) {
+  if (!m) return m;
+  return { ...m, tph: m.min > 0.5 ? m.turns / m.min * 60 : null };
+}
+function fmtV(r, v) {
+  if (v == null) return '–';
+  if (r.fmt === 'pct') return `${Math.round(v * 100)}<small>%</small>`;
+  if (r.fmt === 'sec') return `${v.toFixed(1)}<small>초</small>`;
+  if (r.fmt === 'sec1') return `${v.toFixed(1)}<small>초</small>`;
+  if (r.fmt === 'rate') return `${Math.round(v)}<small>대/시간</small>`;
+  return `${v}<small>회</small>`;
+}
+function meterW(r, v, other) {
+  if (v == null) return 0;
+  if (r.fmt === 'pct') return Math.max(0, Math.min(1, v));
+  const mx = Math.max(v, other || 0, r.fmt === 'count' ? 3 : 1);
+  return Math.max(0, Math.min(1, v / mx));
+}
+// 차이: 비율은 %p, 횟수는 우회전 100대당으로 맞춰 비교, 시간·처리량은 상대 변화
+function diff(r, a, b, A, B) {
+  if (r.dev || a == null || b == null) return null;
+  if (r.fmt === 'pct') {
+    const d = Math.round((b - a) * 100);
+    if (d === 0) return { cls: 'flat', html: '차이 없음' };
+    const good = (d > 0) === (r.better === 'up');
+    return { cls: good ? 'good' : 'bad', html: `${d > 0 ? '+' : ''}${d}%p` };
+  }
+  if (r.fmt === 'count') {
+    if (!A.turns || !B.turns) return null;
+    const ra = a / A.turns, rb = b / B.turns;
+    if (a === 0 && b === 0) return { cls: 'flat', html: '둘 다 0' };
+    if (Math.abs(rb - ra) < 1e-9) return { cls: 'flat', html: '같음' };
+    const good = rb < ra;
+    const rel = ra > 0 ? `${Math.round(Math.abs(rb - ra) / ra * 100)}% ${rb < ra ? '감소' : '증가'}` : '새로 생김';
+    return { cls: good ? 'good' : 'bad', html: `${rel}<small>우회전 대수 기준</small>` };
+  }
+  if (r.fmt === 'sec' || r.fmt === 'rate') {
+    const d = b - a;
+    if (Math.abs(d) <= (r.tol || 0) * Math.abs(a) || Math.abs(d) < 0.05) return { cls: 'flat', html: '거의 같음' };
+    const good = (d > 0) === (r.better === 'up');
+    return { cls: good ? 'good' : 'bad', html: r.fmt === 'sec' ? `${d > 0 ? '+' : ''}${d.toFixed(1)}초` : `${d > 0 ? '+' : ''}${Math.round(d)}대` };
+  }
+  return null;
+}
+function renderK() {
+  const A = withDerived(S.last.A && S.last.A.m), B = withDerived(S.last.B && S.last.B.m);
+  const g = $('kgrid');
+  let h = '<div class="hd k" role="columnheader">지표</div><div class="hd a" role="columnheader">장치 없음</div><div class="hd b" role="columnheader">Right Guard</div><div class="hd d" role="columnheader">차이</div>';
+  for (const r of ROWS) {
+    if (r.sec) { h += `<div class="ksec" role="rowheader">${r.sec}</div>`; continue; }
+    const a = A ? A[r.k] : null, b = B ? B[r.k] : null;
+    const ex = r.extra && B ? r.extra(B) : '';
+    const exA = r.extra && A ? r.extra(A) : '';
+    h += `<div class="kname" role="rowheader"><b>${r.name}</b><small>${r.sub}</small>${r.target ? `<span class="tgt">${r.target}</span>` : ''}</div>`;
+    if (r.dev) h += `<div class="kv a"><span class="na">장치가 없어 해당 없음</span></div>`;
+    else h += `<div class="kv a"><span class="num">${fmtV(r, a)}${A ? `<small>${r.n(A)}</small>` : ''}</span><span class="meter"><i style="width:${meterW(r, a, b) * 100}%"></i></span>${exA ? `<small class="na">${exA}</small>` : ''}</div>`;
+    h += `<div class="kv b"><span class="num">${fmtV(r, b)}${B ? `<small>${r.n(B)}</small>` : ''}</span><span class="meter"><i style="width:${meterW(r, b, a) * 100}%"></i></span>${ex ? `<small class="na">${ex}</small>` : ''}</div>`;
+    const d = diff(r, a, b, A, B);
+    if (r.dev && r.tgt && b != null) h += `<div class="kd ${r.tgt(b) ? 'good' : 'bad'}">${r.tgt(b) ? '목표 달성' : '목표 미달'}</div>`;
+    else h += `<div class="kd ${d ? d.cls : 'flat'}">${d ? d.html : '–'}</div>`;
+  }
+  g.innerHTML = h;
+  if (A) {
+    const min = A.min;
+    $('kSub').textContent = `시뮬레이션 ${min < 1 ? '1분 미만' : `${Math.floor(min)}분`} · 우회전 차 ${A.turns} / ${B ? B.turns : 0}대 · 건넌 보행자 ${A.pedCross}명`;
+    const few = (A.required || 0) < 20;
+    $('kNote').textContent = few ? '아직 표본이 적어요(일시정지가 필요했던 차 20대 미만). 수치가 크게 흔들릴 수 있으니 시간을 더 늘려 보세요.' : '';
+  }
+}
+setInterval(renderK, 400);
+
+// ── 조작
+$('play').onclick = () => {
+  S.playing = !S.playing;
+  $('play').textContent = S.playing ? '일시정지' : '재생';
+  $('play').setAttribute('aria-pressed', S.playing ? 'true' : 'false');
+};
+for (const b of document.querySelectorAll('#speed button')) {
+  b.onclick = () => {
+    S.speed = +b.dataset.v;
+    for (const o of document.querySelectorAll('#speed button')) o.setAttribute('aria-pressed', o === b ? 'true' : 'false');
+  };
+}
+for (const b of document.querySelectorAll('#view button')) {
+  b.onclick = () => {
+    S.view = b.dataset.v;
+    for (const o of document.querySelectorAll('#view button')) o.setAttribute('aria-pressed', o === b ? 'true' : 'false');
+    send('A', { rgc: 'view', v: S.view });
+    send('B', { rgc: 'view', v: S.view });
+  };
+}
+$('scn').onchange = () => { S.scn = $('scn').value; load(); };
+$('again').onclick = () => { S.seed = (Math.floor(Math.random() * 9000) + 11) >>> 0; load(); };
+$('ff').onclick = () => {
+  if (!S.ready.A || !S.ready.B || S.busy) return;
+  S.busy = true;
+  S.ranDone = 0;
+  $('ff').disabled = true;
+  send('A', { rgc: 'run', sec: 600 });
+  send('B', { rgc: 'run', sec: 600 });
+};
+const syncAssume = () => {
+  $('oSelf').textContent = `${$('aSelf').value}%`;
+  $('oObey').textContent = `${$('aObey').value}%`;
+  $('oPrt').textContent = `${(+$('aPrt').value).toFixed(1)}초`;
+  const a = { pSelf: +$('aSelf').value / 100, pObey: +$('aObey').value / 100, prt: +$('aPrt').value };
+  const same = a.pSelf === S.assume.pSelf && a.pObey === S.assume.pObey && a.prt === S.assume.prt;
+  $('aMsg').textContent = same ? '' : '바꾼 값은 ‘적용하고 처음부터’를 눌러야 반영돼요.';
+};
+for (const id of ['aSelf', 'aObey', 'aPrt']) $(id).addEventListener('input', syncAssume);
+$('apply').onclick = () => {
+  S.assume = { pSelf: +$('aSelf').value / 100, pObey: +$('aObey').value / 100, prt: +$('aPrt').value };
+  syncAssume();
+  load();
+};
+$('resetA').onclick = () => {
+  $('aSelf').value = DEF.pSelf * 100; $('aObey').value = DEF.pObey * 100; $('aPrt').value = DEF.prt;
+  syncAssume();
+};
+
+// ── 미리 돌려 본 결과
+function renderRef() {
+  if (!REF) { $('refTable').innerHTML = '<tbody><tr><td>준비 중</td></tr></tbody>'; return; }
+  const scns = REF.scenarios;
+  $('refSub').textContent = `상황마다 ${REF.seeds}개 장면 × ${REF.minutes}분 (가정: 스스로 멈춤 ${Math.round(REF.assume.pSelf * 100)}% · ✕를 따름 ${Math.round(REF.assume.pObey * 100)}% · 알아채는 시간 ${REF.assume.prt}초)`;
+  const rows = [
+    ['운전자 일시정지 이행률', (m) => pct(m.compliance), false],
+    ['ㄴ 건너려는 사람 앞', (m) => pct(m.complianceIntent), false],
+    ['보행자가 차를 먼저 보낸 비율', (m) => pct(m.yieldFailRate), false],
+    ['가까이 스침 (우회전 100대당)', (m) => (m.turns && m.close != null ? (m.close / m.turns * 100).toFixed(1) : '–'), false],
+    ['아찔한 순간 (우회전 100대당)', (m) => (m.turns ? (m.near / m.turns * 100).toFixed(1) : '–'), false],
+    ['충돌 직전 (우회전 100대당)', (m) => (m.turns ? (m.crash / m.turns * 100).toFixed(1) : '–'), false],
+    ['우회전 소요 시간', (m) => (m.turnTime == null ? '–' : `${m.turnTime.toFixed(1)}초`), false],
+    ['우회전 처리량 (대/시간)', (m) => (m.turnsPerHour == null ? '–' : Math.round(m.turnsPerHour)), false],
+    ['건너려는 보행자 감지 성공률', (m) => pct(m.detRate), true],
+    ['ㄴ 그때 ✕가 켜져 있던 비율', (m) => pct(m.warnRate), true],
+    ['경고 선행 시간 (평균)', (m) => (m.lead == null ? '–' : `${m.lead.toFixed(1)}초`), true],
+    ['오감지율', (m) => pct(m.falseRate), true],
+  ];
+  let h = '<thead><tr><th rowspan="2">지표</th>';
+  for (const s of scns) h += `<th class="s sep" colspan="2">${s.name}</th>`;
+  h += '</tr><tr>';
+  for (let i = 0; i < scns.length; i++) h += '<th class="sep">없음</th><th>설치</th>';
+  h += '</tr></thead><tbody>';
+  for (const [name, f, devOnly] of rows) {
+    h += `<tr><td>${name}</td>`;
+    const safe = (m) => { try { const v = f(m); return v == null || /NaN|undefined/.test(String(v)) ? '–' : v; } catch (e) { return '–'; } };
+    for (const s of scns) h += `<td class="a sep">${devOnly ? '·' : safe(s.A)}</td><td class="b">${safe(s.B)}</td>`;
+    h += '</tr>';
+  }
+  h += '</tbody>';
+  $('refTable').innerHTML = h;
+  const n = scns.map((s) => `${s.name}: 우회전 ${s.A.turns}대 · 보행자 ${s.A.pedCross}명`).join(' · ');
+  $('refNote').textContent = `표본 — ${n}. 만든 날 ${REF.date}.`;
+}
+renderRef();
+load();
+</script>
+</body>
+</html>

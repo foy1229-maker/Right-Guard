@@ -76,7 +76,7 @@ body::before {
 .cards {
   display: flex;
   justify-content: center;
-  gap: clamp(18px, 2.6vw, 36px);
+  gap: clamp(14px, 1.9vw, 28px);
   perspective: 1400px;
 }
 .slot { display: flex; flex-direction: column; align-items: center; gap: 16px; animation: deal .75s cubic-bezier(.2, .85, .25, 1) both; animation-delay: calc(var(--i) * 130ms + 120ms); }
@@ -88,7 +88,7 @@ body::before {
   --cut: 18px;
   display: flex;
   flex: 1 1 auto;
-  width: clamp(240px, 28vw, 304px);
+  width: clamp(222px, 20.6vw, 290px);
   min-height: clamp(400px, 56vh, 468px);
   color: inherit;
   text-decoration: none;
@@ -127,10 +127,10 @@ body::before {
 
 .medal { width: clamp(92px, 13vh, 116px); height: auto; flex: none; overflow: visible; }
 .medal-ticks { fill: none; stroke: var(--cr-hi); stroke-opacity: .7; stroke-width: 2; stroke-linecap: round; transform-origin: 60px 60px; transition: transform .6s cubic-bezier(.2, .8, .2, 1), stroke-opacity .35s; }
-.aug-title { margin-top: clamp(14px, 2.6vh, 22px); font-size: clamp(19px, 2.2vw, 25px); white-space: nowrap; font-weight: 700; letter-spacing: -0.01em; color: var(--ivory); }
+.aug-title { margin-top: clamp(14px, 2.6vh, 22px); font-size: clamp(19px, 1.7vw, 24px); white-space: nowrap; font-weight: 700; letter-spacing: -0.01em; color: var(--ivory); }
 .chips { display: flex; flex-wrap: wrap; justify-content: center; gap: 6px; margin-top: 10px; }
 .chips span { padding: 3px 8px 4px; border-radius: 3px; font-size: 12px; font-weight: 600; color: #cfc6b2; background: #24323b; box-shadow: inset 0 0 0 1px rgba(239, 217, 166, .12); }
-.aug-desc { margin-top: clamp(14px, 2.6vh, 22px); max-width: 236px; font-size: 14.5px; line-height: 1.62; color: var(--body); word-break: keep-all; }
+.aug-desc { margin-top: clamp(14px, 2.6vh, 22px); max-width: 232px; font-size: 14.5px; line-height: 1.62; color: var(--body); word-break: keep-all; }
 .aug-desc em { font-style: normal; font-weight: 600; white-space: nowrap; }
 .nw { white-space: nowrap; }
 .hl-gold { color: #e9c983; }
@@ -150,6 +150,13 @@ body::before {
 .slogan { margin: clamp(26px, 4.5vh, 44px) 0 0; font-size: 14px; color: var(--body); text-align: center; text-shadow: 0 1px 10px rgba(0, 0, 0, .85); }
 .slogan b { color: #e9c983; font-weight: 700; }
 
+/* 카드 4장이 한 줄에 들어가지 않는 폭: 2×2 */
+@media (max-width: 1180px) and (min-width: 761px) {
+  .cards { display: grid; grid-template-columns: repeat(2, minmax(0, 330px)); justify-content: center; }
+  .slot { width: 100%; }
+  .aug { width: 100%; min-height: clamp(360px, 46vh, 420px); }
+  .aug-desc { max-width: 268px; }
+}
 /* 노트북처럼 낮은 화면 */
 @media (max-height: 780px) and (min-width: 761px) {
   .project h1 { font-size: 40px; }
@@ -273,6 +280,26 @@ body::before {
             <span class="aug-title" id="t2">직접 조작 시연</span>
             <span class="chips"><span>3D 메타버스</span><span>장치 연동</span></span>
             <span class="aug-desc" id="d2">보문역 사거리 3D 메타버스의 <em class="hl-gold">관제 화면</em>이 열려요. 보행자를 보내고 센서 범위와 걸음 속도를 바꿔 가며 Right Guard의 판단을 직접 확인해요. 실제 LED 장치와 <em class="hl-teal">USB</em>로 연결할 수도 있어요.</span>
+          </span></span>
+        </a>
+      </div>
+      <div class="slot" style="--i:3">
+        <a class="aug" href="compare.html" target="_blank" rel="noopener noreferrer" aria-labelledby="t3" aria-describedby="d3">
+          <span class="aug-frame"><span class="aug-face">
+            <span class="aug-line" aria-hidden="true"></span>
+            <svg class="medal" viewBox="0 0 120 120" aria-hidden="true" focusable="false">
+            <path class="medal-ticks" d="M111.00 60.00L118.00 60.00M109.26 73.20L114.57 74.62M104.17 85.50L110.23 89.00M96.06 96.06L99.95 99.95M85.50 104.17L89.00 110.23M73.20 109.26L74.62 114.57M60.00 111.00L60.00 118.00M46.80 109.26L45.38 114.57M34.50 104.17L31.00 110.23M23.94 96.06L20.05 99.95M15.83 85.50L9.77 89.00M10.74 73.20L5.43 74.62M9.00 60.00L2.00 60.00M10.74 46.80L5.43 45.38M15.83 34.50L9.77 31.00M23.94 23.94L20.05 20.05M34.50 15.83L31.00 9.77M46.80 10.74L45.38 5.43M60.00 9.00L60.00 2.00M73.20 10.74L74.62 5.43M85.50 15.83L89.00 9.77M96.06 23.94L99.95 20.05M104.17 34.50L110.23 31.00M109.26 46.80L114.57 45.38"/>
+            <circle cx="60" cy="60" r="47" fill="url(#rg-medal)" stroke="url(#rg-gold)" stroke-width="3"/>
+            <circle cx="60" cy="60" r="40.5" fill="none" stroke="#c93a56" stroke-opacity=".35"/>
+            <path d="M35 83.5h50" fill="none" stroke="#efe3c4" stroke-opacity=".5" stroke-width="2.4" stroke-linecap="round"/>
+            <rect x="39" y="62" width="16" height="21.5" rx="2.5" fill="#efe3c4" fill-opacity=".34"/>
+            <rect x="65" y="44" width="16" height="39.5" rx="2.5" fill="#b8213f"/>
+            <path d="M44.5 54.5C50 45.5 57.5 39.5 67.5 35.2" fill="none" stroke="#f6e7c1" stroke-width="3" stroke-linecap="round"/>
+            <path d="M61.6 32.4l6.6 2.5-3.2 6.2" fill="none" stroke="#f6e7c1" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"/>
+          </svg>
+            <span class="aug-title" id="t3">효과 비교</span>
+            <span class="chips"><span>장치 있을 때 vs 없을 때</span><span>측정 지표</span></span>
+            <span class="aug-desc" id="d3">같은 보문역 사거리, 같은 사람과 차로 <em class="hl-gold">장치 없음</em>과 <em class="hl-teal">Right Guard 설치</em>를 나란히 돌려요. <em class="hl-red">일시정지 이행률</em>, 감지 성공률, 오감지율을 한눈에 비교해요.</span>
           </span></span>
         </a>
       </div>
