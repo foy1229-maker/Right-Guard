@@ -70,10 +70,18 @@
             flex-shrink: 0;
         }
 
-        .emblem-img {
-            width: 48px;
-            height: auto;
-            filter: drop-shadow(0 3px 6px rgba(145, 0, 35, 0.12));
+        /* 고려대학교 차세대통신학과 가로형 이미지 */
+        .dept-img {
+            display: block;
+            height: 46px;
+            width: auto;
+        }
+
+        .brand-divider {
+            width: 1px;
+            height: 38px;
+            background: rgba(0, 0, 0, 0.14);
+            flex-shrink: 0;
         }
 
         .title-text {
@@ -207,6 +215,10 @@
 
         @media (max-width: 650px) {
             .btn-container { grid-template-columns: 1fr; }
+            .header-area { flex-direction: column; gap: 10px; }
+            .brand-divider { display: none; }
+            .title-text { align-items: center; }
+            .dept-img { height: auto; width: 100%; max-width: 240px; }
         }
     </style>
 </head>
@@ -217,10 +229,11 @@
         <div class="top-row">
             
             <div class="header-area">
-                <img src="emblem-koreauniv-transparent.png" alt="Right Guard Emblem" class="emblem-img">
+                <img src="ku-dept-nextgen.webp" alt="고려대학교 차세대통신학과" class="dept-img">
+                <span class="brand-divider" aria-hidden="true"></span>
                 <div class="title-text">
                     <h1>Right <span>Guard</span></h1>
-                    <div class="sub-tag">KOREA UNIVERSITY</div>
+                    <div class="sub-tag">PROJECT DASHBOARD</div>
                 </div>
             </div>
 
