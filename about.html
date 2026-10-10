@@ -1,0 +1,525 @@
+<!doctype html>
+<html lang="ko">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Right Guard란? · 프로젝트 소개</title>
+<meta name="description" content="Right Guard — 우회전하는 운전자에게 지금 건너는 보행자가 있는지 모퉁이에서 먼저 알려 주는 보행자 감지 장치. 고려대학교 KU CreativeX 창의연구 프로젝트(CRP).">
+<link rel="icon" href="ku-emblem.webp">
+<link rel="stylesheet" as="style" crossorigin href="https://cdn.jsdelivr.net/gh/orioncactus/pretendard@v1.3.9/dist/web/variable/pretendardvariable.min.css">
+<style>
+:root {
+  --abyss: #05080b; --face-top: #12303a; --face: #0b1a20; --face-deep: #071014;
+  --panel: rgba(11, 26, 32, .84); --line: rgba(239, 217, 166, .14);
+  --gold: #c49a5a; --gold-hi: #e9c983;
+  --cr-hi: #c93a56; --cr: #a01334; --cr-mid: #880024; --cr-lo: #4a0011;
+  --ivory: #efe6d2; --body: #b9b2a3; --muted: #8e887b; --teal: #73d2de;
+  --go: #3fd68a; --stop: #ff6b5b; --amber: #f4b942;
+}
+* { box-sizing: border-box; }
+html { -webkit-text-size-adjust: 100%; scroll-behavior: smooth; scroll-padding-top: 72px; }
+body {
+  margin: 0; color: var(--ivory); background: var(--abyss);
+  font-family: "Pretendard Variable", Pretendard, -apple-system, BlinkMacSystemFont, "Apple SD Gothic Neo", "Noto Sans KR", sans-serif;
+  -webkit-font-smoothing: antialiased; word-break: keep-all; overflow-x: hidden; line-height: 1.6;
+}
+body::before {
+  content: ""; position: fixed; inset: 0; z-index: -1;
+  background:
+    radial-gradient(70% 50% at 50% 20%, rgba(10, 30, 38, .55) 0%, rgba(5, 8, 11, 0) 70%),
+    linear-gradient(rgba(5, 8, 11, .8), rgba(5, 8, 11, .92)),
+    url('ku_image.webp?v=3') center / cover no-repeat;
+}
+a { color: var(--teal); }
+.wrap { width: min(1120px, 100%); margin: 0 auto; padding: 0 20px; }
+.nw { white-space: nowrap; }
+.hl-gold { color: var(--gold-hi); } .hl-teal { color: var(--teal); } .hl-red { color: var(--stop); } .hl-go { color: var(--go); }
+
+/* 머리말 */
+.top { display: flex; align-items: center; justify-content: space-between; gap: 16px; padding: 22px 0 6px; }
+.brand { display: flex; align-items: center; gap: 12px; min-width: 0; }
+.brand img { width: 36px; height: auto; filter: drop-shadow(0 4px 10px rgba(0,0,0,.5)); }
+.brand span { font-size: 13px; color: var(--body); line-height: 1.4; }
+.brand b { display: block; color: var(--ivory); font-size: 14px; }
+.back { flex: none; font-size: 13px; font-weight: 600; color: var(--body); text-decoration: none; padding: 8px 12px; border-radius: 8px; border: 1px solid var(--line); background: rgba(11,26,32,.6); }
+.back:hover { color: var(--ivory); border-color: rgba(201, 58, 86, .6); }
+
+/* 첫 화면 */
+.hero { display: grid; grid-template-columns: 1.08fr .92fr; gap: 40px; align-items: center; padding: 34px 0 30px; }
+.eyebrow { margin: 0; font-size: 12.5px; font-weight: 700; letter-spacing: .22em; color: var(--gold); }
+.hero h1 { margin: 10px 0 0; font-size: clamp(40px, 6vw, 64px); line-height: 1.05; font-weight: 800; letter-spacing: -0.025em; }
+.hero h1 em { font-style: normal; color: var(--cr-hi); }
+.hero .lead { margin: 18px 0 0; font-size: clamp(17px, 1.9vw, 20px); line-height: 1.65; color: #ddd5c4; }
+.hero .slogan { margin: 18px 0 0; font-size: 14px; color: var(--body); }
+.hero .slogan b { color: var(--gold-hi); }
+.facts { display: flex; flex-wrap: wrap; gap: 8px; margin-top: 22px; }
+.facts span { padding: 6px 11px 7px; border-radius: 6px; font-size: 13px; font-weight: 600; color: #d8cfbd; background: #13252c; box-shadow: inset 0 0 0 1px rgba(239, 217, 166, .14); }
+.facts b { color: var(--ivory); }
+
+/* LED 패널 */
+.panel-wrap { display: flex; flex-direction: column; align-items: center; gap: 12px; }
+.bezel { --cut: 16px; width: 100%; max-width: 440px; padding: 5px; clip-path: polygon(var(--cut) 0, calc(100% - var(--cut)) 0, 100% var(--cut), 100% calc(100% - var(--cut)), calc(100% - var(--cut)) 100%, var(--cut) 100%, 0 calc(100% - var(--cut)), 0 var(--cut)); background: linear-gradient(158deg, var(--cr-hi) 0%, var(--cr) 18%, var(--cr-lo) 46%, var(--cr-mid) 66%, var(--cr-hi) 100%); filter: drop-shadow(0 18px 30px rgba(0,0,0,.6)); }
+.bezel-in { padding: 18px 18px 14px; clip-path: polygon(13px 0, calc(100% - 13px) 0, 100% 13px, 100% calc(100% - 13px), calc(100% - 13px) 100%, 13px 100%, 0 calc(100% - 13px), 0 13px); background: #0a0b0d; }
+.led-svg { display: block; width: 100%; height: auto; }
+.led-off circle { fill: #1b1d21; }
+.led-x circle { fill: #ff5a48; }
+.led-a circle { fill: #4dffa0; }
+.led-x { filter: drop-shadow(0 0 3px rgba(255, 74, 58, .9)); animation: ledX 6s infinite; }
+.led-a { filter: drop-shadow(0 0 3px rgba(40, 235, 110, .85)); animation: ledA 6s infinite; }
+.plate { margin-top: 12px; text-align: center; font-size: 13px; font-weight: 800; letter-spacing: .3em; color: var(--ivory); background: #910023; padding: 5px 0 6px; border-radius: 3px; }
+.led-cap { position: relative; height: 46px; width: 100%; max-width: 440px; text-align: center; }
+.led-cap span { position: absolute; inset: 0; display: flex; flex-direction: column; align-items: center; justify-content: center; font-size: 14px; color: var(--body); }
+.led-cap b { font-size: 17px; }
+.cap-x { animation: ledX 6s infinite; } .cap-x b { color: var(--stop); }
+.cap-a { animation: ledA 6s infinite; } .cap-a b { color: var(--go); }
+@keyframes ledX { 0%, 45% { opacity: 1; } 50%, 95% { opacity: 0; } 100% { opacity: 1; } }
+@keyframes ledA { 0%, 45% { opacity: 0; } 50%, 95% { opacity: 1; } 100% { opacity: 0; } }
+
+/* 목차 */
+.toc { position: sticky; top: 0; z-index: 5; margin: 6px 0 0; padding: 10px 0; background: linear-gradient(rgba(5,8,11,.94), rgba(5,8,11,.86)); backdrop-filter: blur(6px); border-bottom: 1px solid var(--line); }
+.toc .wrap { display: flex; gap: 8px; overflow-x: auto; scrollbar-width: none; }
+.toc .wrap::-webkit-scrollbar { display: none; }
+.toc a { flex: none; font-size: 13.5px; font-weight: 600; color: var(--body); text-decoration: none; padding: 7px 12px; border-radius: 999px; border: 1px solid var(--line); background: rgba(11, 26, 32, .7); }
+.toc a:hover, .toc a:focus-visible { color: var(--ivory); border-color: var(--cr-hi); }
+.toc a .n { color: var(--gold); margin-right: 6px; font-variant-numeric: tabular-nums; }
+
+/* 구역 */
+section.sec { padding: 64px 0 8px; }
+.sec-h { margin-bottom: 24px; }
+.sec-h .k { margin: 0; font-size: 12.5px; font-weight: 800; letter-spacing: .22em; color: var(--gold); }
+.sec-h h2 { margin: 8px 0 0; font-size: clamp(26px, 3.4vw, 36px); line-height: 1.2; font-weight: 800; letter-spacing: -0.02em; }
+.sec-h p { margin: 12px 0 0; max-width: 760px; font-size: 16px; color: #d6cebd; }
+
+.grid3 { display: grid; grid-template-columns: repeat(3, 1fr); gap: 16px; }
+.card { padding: 22px 22px 20px; border-radius: 12px; background: radial-gradient(140% 90% at 50% 0%, #10262e 0%, #0b1a20 55%, #091418 100%); border: 1.5px solid var(--cr); box-shadow: inset 0 0 0 1px rgba(201,58,86,.12), 0 12px 26px rgba(0,0,0,.32); }
+.card h3 { margin: 0; font-size: 18px; font-weight: 700; letter-spacing: -0.01em; }
+.card p { margin: 10px 0 0; font-size: 14.5px; color: var(--body); }
+.card .big { display: block; font-size: 40px; line-height: 1; font-weight: 800; letter-spacing: -0.02em; color: var(--ivory); margin-bottom: 12px; font-variant-numeric: tabular-nums; }
+.card .big small { font-size: 16px; font-weight: 700; color: var(--body); margin-left: 4px; }
+.card .big .to { font-style: normal; font-size: 24px; font-weight: 600; color: var(--muted); margin: 0 6px 0 2px; vertical-align: 5px; }
+.card .big .go { color: var(--go); }
+.card .src { display: block; margin-top: 12px; font-size: 12px; color: var(--muted); }
+.card .src a { color: var(--muted); }
+
+/* 목적 (프레임 강조) */
+.purpose { --cut: 18px; padding: 6px; clip-path: polygon(var(--cut) 0, calc(100% - var(--cut)) 0, 100% var(--cut), 100% calc(100% - var(--cut)), calc(100% - var(--cut)) 100%, var(--cut) 100%, 0 calc(100% - var(--cut)), 0 var(--cut)); background: linear-gradient(158deg, var(--cr-hi) 0%, var(--cr) 18%, var(--cr-lo) 46%, var(--cr-mid) 66%, var(--cr-hi) 100%); margin-bottom: 18px; }
+.purpose-in { padding: 28px 32px 26px; clip-path: polygon(15px 0, calc(100% - 15px) 0, 100% 15px, 100% calc(100% - 15px), calc(100% - 15px) 100%, 15px 100%, 0 calc(100% - 15px), 0 15px); background: radial-gradient(130% 80% at 50% 0%, var(--face-top) 0%, var(--face) 55%, var(--face-deep) 100%); }
+.purpose .k { margin: 0; font-size: 12.5px; font-weight: 800; letter-spacing: .2em; color: var(--gold); }
+.purpose blockquote { margin: 10px 0 0; font-size: clamp(19px, 2.4vw, 25px); line-height: 1.55; font-weight: 700; letter-spacing: -0.01em; color: var(--ivory); }
+.purpose p { margin: 12px 0 0; font-size: 15px; color: var(--body); }
+.goal .num { display: inline-grid; place-items: center; width: 30px; height: 30px; border-radius: 50%; background: var(--cr-mid); color: #fff; font-weight: 800; font-size: 14px; margin-bottom: 12px; }
+.goal .kpi { display: flex; flex-wrap: wrap; gap: 6px; margin-top: 12px; }
+.goal .kpi span { padding: 4px 9px 5px; border-radius: 5px; font-size: 13px; font-weight: 700; color: var(--gold-hi); background: rgba(233, 201, 131, .1); box-shadow: inset 0 0 0 1px rgba(233, 201, 131, .25); }
+
+/* 메타버스 결과 띠 */
+.sim { margin-top: 18px; padding: 20px 22px; border-radius: 12px; background: rgba(5, 12, 15, .7); border: 1px solid var(--line); }
+.sim-h { display: flex; flex-wrap: wrap; align-items: baseline; justify-content: space-between; gap: 8px 16px; }
+.sim-h b { font-size: 16px; }
+.sim-h .sub { margin-left: 10px; font-size: 13.5px; color: var(--muted); }
+.sim-h a { font-size: 13.5px; font-weight: 700; color: var(--teal); text-decoration: none; }
+.sim-h a:hover { text-decoration: underline; }
+.sim-g { display: grid; grid-template-columns: repeat(4, 1fr); gap: 12px; margin-top: 14px; }
+.sim-g div { padding: 14px 14px 12px; border-radius: 10px; background: rgba(11, 26, 32, .8); border: 1px solid var(--line); }
+.sim-g .v { font-size: 22px; font-weight: 800; font-variant-numeric: tabular-nums; letter-spacing: -0.01em; }
+.sim-g .v i { font-style: normal; color: var(--muted); font-weight: 600; margin: 0 6px; }
+.sim-g .v .up { color: var(--go); } .sim-g .v .bad { color: var(--amber); }
+.sim-g small { display: block; margin-top: 4px; font-size: 13px; color: var(--body); }
+.sim .note { margin: 12px 0 0; font-size: 12.5px; color: var(--muted); }
+
+/* 작동 원리 */
+.how { display: grid; grid-template-columns: 1.05fr .95fr; gap: 28px; align-items: start; }
+.map-box { border-radius: 12px; overflow: hidden; border: 1.5px solid var(--cr); background: #2a3338; }
+.map { display: block; width: 100%; height: auto; }
+.map-fan { fill: rgba(63, 214, 138, .16); stroke: #3fd68a; stroke-width: 2; }
+.map .pin circle { fill: #0b1a20; stroke: #e9c983; stroke-width: 2; }
+.map .pin text { fill: #e9c983; font-size: 14px; font-weight: 800; text-anchor: middle; font-family: inherit; }
+.map .road { fill: #a39d90; font-size: 15px; font-weight: 600; font-family: inherit; paint-order: stroke; stroke: #161e22; stroke-width: 6px; stroke-linejoin: round; }
+.map .road.top { stroke: #2a3338; }
+.map .road.site { fill: #ee7b90; font-weight: 700; stroke: #33161d; }
+.legend { list-style: none; margin: 0; padding: 14px 16px; display: grid; grid-template-columns: 1fr 1fr; gap: 6px 14px; font-size: 13.5px; color: var(--body); background: #0b1a20; border-top: 1px solid var(--line); }
+.legend li { display: flex; gap: 8px; align-items: baseline; }
+.legend .p { flex: none; display: inline-grid; place-items: center; width: 20px; height: 20px; border-radius: 50%; border: 1.5px solid var(--gold-hi); color: var(--gold-hi); font-size: 11.5px; font-weight: 800; }
+.legend .ln { flex: none; align-self: center; width: 20px; border-top: 2px dashed var(--amber); }
+.steps { list-style: none; margin: 0; padding: 0; display: grid; gap: 12px; }
+.steps li { display: grid; grid-template-columns: 44px 1fr; gap: 14px; padding: 18px 18px 16px; border-radius: 12px; background: var(--panel); border: 1px solid var(--line); }
+.steps .si { width: 44px; height: 44px; border-radius: 10px; display: grid; place-items: center; background: #13252c; box-shadow: inset 0 0 0 1px rgba(239, 217, 166, .14); }
+.steps .si svg { width: 26px; height: 26px; }
+.steps b { font-size: 16.5px; }
+.steps p { margin: 4px 0 0; font-size: 14.5px; color: var(--body); }
+.steps .tag { display: inline-block; margin-left: 6px; font-size: 12px; font-weight: 700; color: var(--gold-hi); }
+
+.flow { display: flex; align-items: stretch; gap: 10px; margin-top: 24px; }
+.node { flex: 1 1 0; padding: 16px 16px 14px; border-radius: 12px; background: radial-gradient(140% 90% at 50% 0%, #10262e 0%, #0b1a20 55%, #091418 100%); border: 1.5px solid var(--cr); }
+.node .k { font-size: 12px; font-weight: 800; letter-spacing: .14em; color: var(--gold); }
+.node b { display: block; margin-top: 4px; font-size: 16px; }
+.node p { margin: 6px 0 0; font-size: 13.5px; color: var(--body); }
+.link { flex: none; align-self: center; display: flex; flex-direction: column; align-items: center; gap: 2px; font-size: 12px; font-weight: 700; }
+.link svg { width: 40px; height: 14px; }
+.link.bt { color: var(--go); } .link.usb { color: #ee7b90; }
+
+.rules { display: grid; grid-template-columns: 1fr 1fr; gap: 16px; margin-top: 16px; }
+.rules ul { margin: 0; padding: 0; list-style: none; display: grid; gap: 10px; }
+.rules li { display: grid; grid-template-columns: 30px 1fr; gap: 10px; font-size: 14.5px; color: var(--body); }
+.rules li b { color: var(--ivory); }
+.rules .ic { width: 30px; height: 30px; border-radius: 7px; display: grid; place-items: center; font-weight: 800; font-size: 15px; background: #0a0b0d; }
+.rules .ic.x { color: var(--stop); box-shadow: inset 0 0 0 1px rgba(255,107,91,.4); }
+.rules .ic.a { color: var(--go); box-shadow: inset 0 0 0 1px rgba(63,214,138,.4); }
+.rules .ic.s { color: var(--gold-hi); box-shadow: inset 0 0 0 1px rgba(233,201,131,.35); font-size: 12px; }
+table.spec { width: 100%; border-collapse: collapse; font-size: 14px; }
+table.spec th, table.spec td { padding: 9px 10px; text-align: left; border-top: 1px solid var(--line); vertical-align: top; }
+table.spec tr:first-child th, table.spec tr:first-child td { border-top: 0; }
+table.spec th { width: 34%; color: var(--ivory); font-weight: 700; }
+table.spec td { color: var(--body); }
+.card h3 + table.spec { margin-top: 10px; }
+
+/* 걸어온 길 */
+.tl { list-style: none; margin: 0; padding: 0 0 0 4px; position: relative; }
+.tl::before { content: ""; position: absolute; left: 132px; top: 8px; bottom: 8px; width: 2px; background: linear-gradient(var(--cr-mid), var(--cr-hi) 60%, var(--gold)); opacity: .7; }
+.tl-i { position: relative; display: grid; grid-template-columns: 112px 1fr; gap: 0 40px; padding: 0 0 22px; }
+.tl-dot { position: absolute; left: 123px; top: 5px; width: 20px; height: 20px; border-radius: 50%; background: #0b1a20; border: 2px solid var(--cr-hi); }
+.tl-i.key .tl-dot { background: var(--cr-hi); }
+.tl-i.proto .tl-dot { border-color: var(--muted); }
+.tl-i.now .tl-dot { background: var(--gold-hi); border-color: var(--gold-hi); box-shadow: 0 0 0 6px rgba(233, 201, 131, .18); }
+.tl-when { text-align: right; font-size: 13.5px; font-weight: 700; color: var(--gold-hi); padding-top: 3px; }
+.tl-i.proto .tl-when { color: var(--muted); }
+.now-badge { display: inline-block; margin-left: 6px; padding: 1px 7px 2px; border-radius: 999px; font-size: 11px; font-weight: 800; color: #1d1406; background: var(--gold-hi); vertical-align: 1px; }
+.tl-body b { font-size: 16.5px; }
+.tl-body p { margin: 4px 0 0; font-size: 14.5px; color: var(--body); max-width: 720px; }
+
+/* 앞으로 */
+.phases { display: grid; grid-template-columns: repeat(4, 1fr); gap: 14px; }
+.phase { padding: 18px 18px 16px; border-radius: 12px; background: var(--panel); border: 1px solid var(--line); border-top: 3px solid var(--cr-hi); }
+.phase:last-child { border-top-color: var(--gold-hi); }
+.ph-top { display: flex; justify-content: space-between; align-items: center; }
+.ph-k { display: inline-grid; place-items: center; width: 28px; height: 28px; border-radius: 6px; font-weight: 800; background: var(--cr-mid); color: #fff; }
+.phase:last-child .ph-k { background: var(--gold-hi); color: #1d1406; }
+.ph-m { font-size: 13px; font-weight: 700; color: var(--gold-hi); }
+.phase h3 { margin: 12px 0 0; font-size: 17px; }
+.phase ul { margin: 10px 0 0; padding-left: 18px; font-size: 14px; color: var(--body); display: grid; gap: 6px; }
+.callout { margin-top: 14px; padding: 14px 16px; border-radius: 10px; font-size: 14px; color: var(--body); background: rgba(160, 19, 52, .14); border: 1px solid rgba(201, 58, 86, .45); }
+.callout b { color: #ee7b90; }
+.todo { margin-top: 16px; }
+.todo ul { margin: 10px 0 0; padding-left: 18px; display: grid; gap: 8px; font-size: 14.5px; color: var(--body); }
+.todo li b { color: var(--ivory); }
+
+/* 팀 */
+.team { display: grid; grid-template-columns: repeat(5, 1fr); gap: 12px; }
+.mem { display: flex; flex-direction: column; gap: 10px; padding: 18px 16px 16px; border-radius: 12px; background: var(--panel); border: 1px solid var(--line); }
+.mem-i { width: 44px; height: 44px; border-radius: 50%; display: grid; place-items: center; font-size: 18px; font-weight: 800; color: var(--ivory); background: linear-gradient(150deg, var(--cr-hi), var(--cr-lo)); box-shadow: 0 0 0 2px rgba(233, 201, 131, .35); }
+.mem b { display: block; font-size: 17px; }
+.mem .role { display: block; margin-top: 2px; font-size: 13px; font-weight: 700; color: var(--gold-hi); }
+.mem p { margin: 8px 0 0; font-size: 13.5px; color: var(--body); }
+
+/* 끝 */
+.more { display: grid; grid-template-columns: repeat(2, 1fr); gap: 12px; }
+.more a { display: flex; flex-direction: column; gap: 4px; padding: 16px 18px; border-radius: 12px; text-decoration: none; color: var(--ivory); background: var(--panel); border: 1px solid var(--line); }
+.more a:hover, .more a:focus-visible { border-color: var(--cr-hi); }
+.more a b { font-size: 16px; }
+.more a span { font-size: 13.5px; color: var(--body); }
+.more a.sub b { font-size: 14.5px; color: #d6cebd; }
+footer { margin: 44px 0 36px; padding-top: 18px; border-top: 1px solid var(--line); font-size: 12.5px; color: var(--muted); line-height: 1.75; }
+footer a { color: var(--body); }
+footer .sl { margin-top: 10px; color: var(--body); }
+footer .sl b { color: var(--gold-hi); }
+
+@media (max-width: 980px) {
+  .hero { grid-template-columns: 1fr; gap: 26px; }
+  .bezel, .led-cap { max-width: 380px; }
+  .how { grid-template-columns: 1fr; }
+  .sim-g { grid-template-columns: 1fr 1fr; }
+  .phases { grid-template-columns: 1fr 1fr; }
+  .team { grid-template-columns: repeat(3, 1fr); }
+}
+@media (max-width: 720px) {
+  .wrap { padding: 0 16px; }
+  .grid3, .rules, .more { grid-template-columns: 1fr; }
+  .sim-h .sub { display: block; margin: 2px 0 0; }
+  .sim-g .v { font-size: 19px; }
+  .flow { flex-direction: column; }
+  .link { flex-direction: row; gap: 8px; }
+  .link svg { transform: rotate(90deg); width: 26px; }
+  .purpose-in { padding: 22px 20px 20px; }
+  .tl::before { left: 9px; }
+  .tl-i { grid-template-columns: 1fr; gap: 2px; padding-left: 36px; }
+  .tl-dot { left: 0; }
+  .tl-when { text-align: left; }
+  .phases { grid-template-columns: 1fr; }
+  .team { grid-template-columns: 1fr 1fr; }
+  .legend { grid-template-columns: 1fr; }
+  section.sec { padding-top: 52px; }
+  .top { padding-top: 16px; }
+  .brand span { font-size: 12px; }
+}
+@media (max-width: 380px) {
+  .team { grid-template-columns: 1fr; }
+}
+@media (prefers-reduced-motion: reduce) {
+  html { scroll-behavior: auto; }
+  .led-x, .cap-x { animation: none; opacity: 0; }
+  .led-a, .cap-a { animation: none; opacity: 1; }
+}
+@media print {
+  body { background: #fff; color: #222; }
+  body::before, .toc, .back { display: none; }
+  .card, .steps li, .phase, .mem, .sim, .sim-g div, .node, .more a { background: #fff; border-color: #c9c2b6; box-shadow: none; }
+  .card p, .steps p, .tl-body p, .phase ul, .mem p, .sec-h p, .hero .lead, .purpose p { color: #333; }
+  .purpose, .bezel { background: #910023; }
+}
+</style>
+</head>
+<body>
+<div class="wrap">
+  <header class="top">
+    <div class="brand"><img src="ku-emblem.webp" alt="고려대학교 엠블럼" width="164" height="220"><span><b>고려대학교 KU CreativeX</b>창의연구 프로젝트(CRP) · 공감형 우회전 교통안전</span></div>
+    <a class="back" href="index.html">대시보드로</a>
+  </header>
+
+  <div class="hero">
+    <div>
+      <p class="eyebrow">TEAM RIGHT GUARD</p>
+      <h1><em>Right Guard</em>란?</h1>
+      <p class="lead">우회전하는 운전자에게 <b class="hl-gold">지금 건너는(건너려는) 보행자가 있는지</b>를 모퉁이에서 먼저 알려 주는 보행자 감지 장치예요. 모퉁이 기둥의 레이더가 사람을 보면, 운전자 쪽을 향한 LED에 <b class="hl-red">✕ 우회전 불가</b>가, 사람이 없으면 <b class="hl-go">→ 우회전 가능</b>이 켜져요.</p>
+      <p class="slogan"><b>Right Turn, Right Time</b> · 보행자 보호 중심의 교통안전 체계 제안</p>
+      <div class="facts"><span>레이더 <b>LD2450</b> · 6 m · ±60°</span><span>LED <b>P10 32×16</b></span><span><b>1초</b> 안전 지연</span><span>시범 설치 후보 <b>보문역 사거리</b></span></div>
+    </div>
+    <div class="panel-wrap">
+      <div class="bezel"><div class="bezel-in"><svg class="led-svg" viewBox="0 0 320 160" role="img" aria-label="P10 LED 패널: ✕(우회전 불가)와 →(우회전 가능)이 번갈아 켜짐">
+  <g class="led-off"><circle cx="5" cy="5" r="3.4"/><circle cx="15" cy="5" r="3.4"/><circle cx="25" cy="5" r="3.4"/><circle cx="35" cy="5" r="3.4"/><circle cx="45" cy="5" r="3.4"/><circle cx="55" cy="5" r="3.4"/><circle cx="65" cy="5" r="3.4"/><circle cx="75" cy="5" r="3.4"/><circle cx="85" cy="5" r="3.4"/><circle cx="95" cy="5" r="3.4"/><circle cx="105" cy="5" r="3.4"/><circle cx="115" cy="5" r="3.4"/><circle cx="125" cy="5" r="3.4"/><circle cx="135" cy="5" r="3.4"/><circle cx="145" cy="5" r="3.4"/><circle cx="155" cy="5" r="3.4"/><circle cx="165" cy="5" r="3.4"/><circle cx="175" cy="5" r="3.4"/><circle cx="185" cy="5" r="3.4"/><circle cx="195" cy="5" r="3.4"/><circle cx="205" cy="5" r="3.4"/><circle cx="215" cy="5" r="3.4"/><circle cx="225" cy="5" r="3.4"/><circle cx="235" cy="5" r="3.4"/><circle cx="245" cy="5" r="3.4"/><circle cx="255" cy="5" r="3.4"/><circle cx="265" cy="5" r="3.4"/><circle cx="275" cy="5" r="3.4"/><circle cx="285" cy="5" r="3.4"/><circle cx="295" cy="5" r="3.4"/><circle cx="305" cy="5" r="3.4"/><circle cx="315" cy="5" r="3.4"/><circle cx="5" cy="15" r="3.4"/><circle cx="15" cy="15" r="3.4"/><circle cx="25" cy="15" r="3.4"/><circle cx="35" cy="15" r="3.4"/><circle cx="45" cy="15" r="3.4"/><circle cx="55" cy="15" r="3.4"/><circle cx="65" cy="15" r="3.4"/><circle cx="75" cy="15" r="3.4"/><circle cx="85" cy="15" r="3.4"/><circle cx="95" cy="15" r="3.4"/><circle cx="105" cy="15" r="3.4"/><circle cx="115" cy="15" r="3.4"/><circle cx="125" cy="15" r="3.4"/><circle cx="135" cy="15" r="3.4"/><circle cx="145" cy="15" r="3.4"/><circle cx="155" cy="15" r="3.4"/><circle cx="165" cy="15" r="3.4"/><circle cx="175" cy="15" r="3.4"/><circle cx="185" cy="15" r="3.4"/><circle cx="195" cy="15" r="3.4"/><circle cx="205" cy="15" r="3.4"/><circle cx="215" cy="15" r="3.4"/><circle cx="225" cy="15" r="3.4"/><circle cx="235" cy="15" r="3.4"/><circle cx="245" cy="15" r="3.4"/><circle cx="255" cy="15" r="3.4"/><circle cx="265" cy="15" r="3.4"/><circle cx="275" cy="15" r="3.4"/><circle cx="285" cy="15" r="3.4"/><circle cx="295" cy="15" r="3.4"/><circle cx="305" cy="15" r="3.4"/><circle cx="315" cy="15" r="3.4"/><circle cx="5" cy="25" r="3.4"/><circle cx="15" cy="25" r="3.4"/><circle cx="25" cy="25" r="3.4"/><circle cx="35" cy="25" r="3.4"/><circle cx="45" cy="25" r="3.4"/><circle cx="55" cy="25" r="3.4"/><circle cx="65" cy="25" r="3.4"/><circle cx="75" cy="25" r="3.4"/><circle cx="85" cy="25" r="3.4"/><circle cx="95" cy="25" r="3.4"/><circle cx="105" cy="25" r="3.4"/><circle cx="115" cy="25" r="3.4"/><circle cx="125" cy="25" r="3.4"/><circle cx="135" cy="25" r="3.4"/><circle cx="145" cy="25" r="3.4"/><circle cx="155" cy="25" r="3.4"/><circle cx="165" cy="25" r="3.4"/><circle cx="175" cy="25" r="3.4"/><circle cx="185" cy="25" r="3.4"/><circle cx="195" cy="25" r="3.4"/><circle cx="205" cy="25" r="3.4"/><circle cx="215" cy="25" r="3.4"/><circle cx="225" cy="25" r="3.4"/><circle cx="235" cy="25" r="3.4"/><circle cx="245" cy="25" r="3.4"/><circle cx="255" cy="25" r="3.4"/><circle cx="265" cy="25" r="3.4"/><circle cx="275" cy="25" r="3.4"/><circle cx="285" cy="25" r="3.4"/><circle cx="295" cy="25" r="3.4"/><circle cx="305" cy="25" r="3.4"/><circle cx="315" cy="25" r="3.4"/><circle cx="5" cy="35" r="3.4"/><circle cx="15" cy="35" r="3.4"/><circle cx="25" cy="35" r="3.4"/><circle cx="35" cy="35" r="3.4"/><circle cx="45" cy="35" r="3.4"/><circle cx="55" cy="35" r="3.4"/><circle cx="65" cy="35" r="3.4"/><circle cx="75" cy="35" r="3.4"/><circle cx="85" cy="35" r="3.4"/><circle cx="95" cy="35" r="3.4"/><circle cx="105" cy="35" r="3.4"/><circle cx="115" cy="35" r="3.4"/><circle cx="125" cy="35" r="3.4"/><circle cx="135" cy="35" r="3.4"/><circle cx="145" cy="35" r="3.4"/><circle cx="155" cy="35" r="3.4"/><circle cx="165" cy="35" r="3.4"/><circle cx="175" cy="35" r="3.4"/><circle cx="185" cy="35" r="3.4"/><circle cx="195" cy="35" r="3.4"/><circle cx="205" cy="35" r="3.4"/><circle cx="215" cy="35" r="3.4"/><circle cx="225" cy="35" r="3.4"/><circle cx="235" cy="35" r="3.4"/><circle cx="245" cy="35" r="3.4"/><circle cx="255" cy="35" r="3.4"/><circle cx="265" cy="35" r="3.4"/><circle cx="275" cy="35" r="3.4"/><circle cx="285" cy="35" r="3.4"/><circle cx="295" cy="35" r="3.4"/><circle cx="305" cy="35" r="3.4"/><circle cx="315" cy="35" r="3.4"/><circle cx="5" cy="45" r="3.4"/><circle cx="15" cy="45" r="3.4"/><circle cx="25" cy="45" r="3.4"/><circle cx="35" cy="45" r="3.4"/><circle cx="45" cy="45" r="3.4"/><circle cx="55" cy="45" r="3.4"/><circle cx="65" cy="45" r="3.4"/><circle cx="75" cy="45" r="3.4"/><circle cx="85" cy="45" r="3.4"/><circle cx="95" cy="45" r="3.4"/><circle cx="105" cy="45" r="3.4"/><circle cx="115" cy="45" r="3.4"/><circle cx="125" cy="45" r="3.4"/><circle cx="135" cy="45" r="3.4"/><circle cx="145" cy="45" r="3.4"/><circle cx="155" cy="45" r="3.4"/><circle cx="165" cy="45" r="3.4"/><circle cx="175" cy="45" r="3.4"/><circle cx="185" cy="45" r="3.4"/><circle cx="195" cy="45" r="3.4"/><circle cx="205" cy="45" r="3.4"/><circle cx="215" cy="45" r="3.4"/><circle cx="225" cy="45" r="3.4"/><circle cx="235" cy="45" r="3.4"/><circle cx="245" cy="45" r="3.4"/><circle cx="255" cy="45" r="3.4"/><circle cx="265" cy="45" r="3.4"/><circle cx="275" cy="45" r="3.4"/><circle cx="285" cy="45" r="3.4"/><circle cx="295" cy="45" r="3.4"/><circle cx="305" cy="45" r="3.4"/><circle cx="315" cy="45" r="3.4"/><circle cx="5" cy="55" r="3.4"/><circle cx="15" cy="55" r="3.4"/><circle cx="25" cy="55" r="3.4"/><circle cx="35" cy="55" r="3.4"/><circle cx="45" cy="55" r="3.4"/><circle cx="55" cy="55" r="3.4"/><circle cx="65" cy="55" r="3.4"/><circle cx="75" cy="55" r="3.4"/><circle cx="85" cy="55" r="3.4"/><circle cx="95" cy="55" r="3.4"/><circle cx="105" cy="55" r="3.4"/><circle cx="115" cy="55" r="3.4"/><circle cx="125" cy="55" r="3.4"/><circle cx="135" cy="55" r="3.4"/><circle cx="145" cy="55" r="3.4"/><circle cx="155" cy="55" r="3.4"/><circle cx="165" cy="55" r="3.4"/><circle cx="175" cy="55" r="3.4"/><circle cx="185" cy="55" r="3.4"/><circle cx="195" cy="55" r="3.4"/><circle cx="205" cy="55" r="3.4"/><circle cx="215" cy="55" r="3.4"/><circle cx="225" cy="55" r="3.4"/><circle cx="235" cy="55" r="3.4"/><circle cx="245" cy="55" r="3.4"/><circle cx="255" cy="55" r="3.4"/><circle cx="265" cy="55" r="3.4"/><circle cx="275" cy="55" r="3.4"/><circle cx="285" cy="55" r="3.4"/><circle cx="295" cy="55" r="3.4"/><circle cx="305" cy="55" r="3.4"/><circle cx="315" cy="55" r="3.4"/><circle cx="5" cy="65" r="3.4"/><circle cx="15" cy="65" r="3.4"/><circle cx="25" cy="65" r="3.4"/><circle cx="35" cy="65" r="3.4"/><circle cx="45" cy="65" r="3.4"/><circle cx="55" cy="65" r="3.4"/><circle cx="65" cy="65" r="3.4"/><circle cx="75" cy="65" r="3.4"/><circle cx="85" cy="65" r="3.4"/><circle cx="95" cy="65" r="3.4"/><circle cx="105" cy="65" r="3.4"/><circle cx="115" cy="65" r="3.4"/><circle cx="125" cy="65" r="3.4"/><circle cx="135" cy="65" r="3.4"/><circle cx="145" cy="65" r="3.4"/><circle cx="155" cy="65" r="3.4"/><circle cx="165" cy="65" r="3.4"/><circle cx="175" cy="65" r="3.4"/><circle cx="185" cy="65" r="3.4"/><circle cx="195" cy="65" r="3.4"/><circle cx="205" cy="65" r="3.4"/><circle cx="215" cy="65" r="3.4"/><circle cx="225" cy="65" r="3.4"/><circle cx="235" cy="65" r="3.4"/><circle cx="245" cy="65" r="3.4"/><circle cx="255" cy="65" r="3.4"/><circle cx="265" cy="65" r="3.4"/><circle cx="275" cy="65" r="3.4"/><circle cx="285" cy="65" r="3.4"/><circle cx="295" cy="65" r="3.4"/><circle cx="305" cy="65" r="3.4"/><circle cx="315" cy="65" r="3.4"/><circle cx="5" cy="75" r="3.4"/><circle cx="15" cy="75" r="3.4"/><circle cx="25" cy="75" r="3.4"/><circle cx="35" cy="75" r="3.4"/><circle cx="45" cy="75" r="3.4"/><circle cx="55" cy="75" r="3.4"/><circle cx="65" cy="75" r="3.4"/><circle cx="75" cy="75" r="3.4"/><circle cx="85" cy="75" r="3.4"/><circle cx="95" cy="75" r="3.4"/><circle cx="105" cy="75" r="3.4"/><circle cx="115" cy="75" r="3.4"/><circle cx="125" cy="75" r="3.4"/><circle cx="135" cy="75" r="3.4"/><circle cx="145" cy="75" r="3.4"/><circle cx="155" cy="75" r="3.4"/><circle cx="165" cy="75" r="3.4"/><circle cx="175" cy="75" r="3.4"/><circle cx="185" cy="75" r="3.4"/><circle cx="195" cy="75" r="3.4"/><circle cx="205" cy="75" r="3.4"/><circle cx="215" cy="75" r="3.4"/><circle cx="225" cy="75" r="3.4"/><circle cx="235" cy="75" r="3.4"/><circle cx="245" cy="75" r="3.4"/><circle cx="255" cy="75" r="3.4"/><circle cx="265" cy="75" r="3.4"/><circle cx="275" cy="75" r="3.4"/><circle cx="285" cy="75" r="3.4"/><circle cx="295" cy="75" r="3.4"/><circle cx="305" cy="75" r="3.4"/><circle cx="315" cy="75" r="3.4"/><circle cx="5" cy="85" r="3.4"/><circle cx="15" cy="85" r="3.4"/><circle cx="25" cy="85" r="3.4"/><circle cx="35" cy="85" r="3.4"/><circle cx="45" cy="85" r="3.4"/><circle cx="55" cy="85" r="3.4"/><circle cx="65" cy="85" r="3.4"/><circle cx="75" cy="85" r="3.4"/><circle cx="85" cy="85" r="3.4"/><circle cx="95" cy="85" r="3.4"/><circle cx="105" cy="85" r="3.4"/><circle cx="115" cy="85" r="3.4"/><circle cx="125" cy="85" r="3.4"/><circle cx="135" cy="85" r="3.4"/><circle cx="145" cy="85" r="3.4"/><circle cx="155" cy="85" r="3.4"/><circle cx="165" cy="85" r="3.4"/><circle cx="175" cy="85" r="3.4"/><circle cx="185" cy="85" r="3.4"/><circle cx="195" cy="85" r="3.4"/><circle cx="205" cy="85" r="3.4"/><circle cx="215" cy="85" r="3.4"/><circle cx="225" cy="85" r="3.4"/><circle cx="235" cy="85" r="3.4"/><circle cx="245" cy="85" r="3.4"/><circle cx="255" cy="85" r="3.4"/><circle cx="265" cy="85" r="3.4"/><circle cx="275" cy="85" r="3.4"/><circle cx="285" cy="85" r="3.4"/><circle cx="295" cy="85" r="3.4"/><circle cx="305" cy="85" r="3.4"/><circle cx="315" cy="85" r="3.4"/><circle cx="5" cy="95" r="3.4"/><circle cx="15" cy="95" r="3.4"/><circle cx="25" cy="95" r="3.4"/><circle cx="35" cy="95" r="3.4"/><circle cx="45" cy="95" r="3.4"/><circle cx="55" cy="95" r="3.4"/><circle cx="65" cy="95" r="3.4"/><circle cx="75" cy="95" r="3.4"/><circle cx="85" cy="95" r="3.4"/><circle cx="95" cy="95" r="3.4"/><circle cx="105" cy="95" r="3.4"/><circle cx="115" cy="95" r="3.4"/><circle cx="125" cy="95" r="3.4"/><circle cx="135" cy="95" r="3.4"/><circle cx="145" cy="95" r="3.4"/><circle cx="155" cy="95" r="3.4"/><circle cx="165" cy="95" r="3.4"/><circle cx="175" cy="95" r="3.4"/><circle cx="185" cy="95" r="3.4"/><circle cx="195" cy="95" r="3.4"/><circle cx="205" cy="95" r="3.4"/><circle cx="215" cy="95" r="3.4"/><circle cx="225" cy="95" r="3.4"/><circle cx="235" cy="95" r="3.4"/><circle cx="245" cy="95" r="3.4"/><circle cx="255" cy="95" r="3.4"/><circle cx="265" cy="95" r="3.4"/><circle cx="275" cy="95" r="3.4"/><circle cx="285" cy="95" r="3.4"/><circle cx="295" cy="95" r="3.4"/><circle cx="305" cy="95" r="3.4"/><circle cx="315" cy="95" r="3.4"/><circle cx="5" cy="105" r="3.4"/><circle cx="15" cy="105" r="3.4"/><circle cx="25" cy="105" r="3.4"/><circle cx="35" cy="105" r="3.4"/><circle cx="45" cy="105" r="3.4"/><circle cx="55" cy="105" r="3.4"/><circle cx="65" cy="105" r="3.4"/><circle cx="75" cy="105" r="3.4"/><circle cx="85" cy="105" r="3.4"/><circle cx="95" cy="105" r="3.4"/><circle cx="105" cy="105" r="3.4"/><circle cx="115" cy="105" r="3.4"/><circle cx="125" cy="105" r="3.4"/><circle cx="135" cy="105" r="3.4"/><circle cx="145" cy="105" r="3.4"/><circle cx="155" cy="105" r="3.4"/><circle cx="165" cy="105" r="3.4"/><circle cx="175" cy="105" r="3.4"/><circle cx="185" cy="105" r="3.4"/><circle cx="195" cy="105" r="3.4"/><circle cx="205" cy="105" r="3.4"/><circle cx="215" cy="105" r="3.4"/><circle cx="225" cy="105" r="3.4"/><circle cx="235" cy="105" r="3.4"/><circle cx="245" cy="105" r="3.4"/><circle cx="255" cy="105" r="3.4"/><circle cx="265" cy="105" r="3.4"/><circle cx="275" cy="105" r="3.4"/><circle cx="285" cy="105" r="3.4"/><circle cx="295" cy="105" r="3.4"/><circle cx="305" cy="105" r="3.4"/><circle cx="315" cy="105" r="3.4"/><circle cx="5" cy="115" r="3.4"/><circle cx="15" cy="115" r="3.4"/><circle cx="25" cy="115" r="3.4"/><circle cx="35" cy="115" r="3.4"/><circle cx="45" cy="115" r="3.4"/><circle cx="55" cy="115" r="3.4"/><circle cx="65" cy="115" r="3.4"/><circle cx="75" cy="115" r="3.4"/><circle cx="85" cy="115" r="3.4"/><circle cx="95" cy="115" r="3.4"/><circle cx="105" cy="115" r="3.4"/><circle cx="115" cy="115" r="3.4"/><circle cx="125" cy="115" r="3.4"/><circle cx="135" cy="115" r="3.4"/><circle cx="145" cy="115" r="3.4"/><circle cx="155" cy="115" r="3.4"/><circle cx="165" cy="115" r="3.4"/><circle cx="175" cy="115" r="3.4"/><circle cx="185" cy="115" r="3.4"/><circle cx="195" cy="115" r="3.4"/><circle cx="205" cy="115" r="3.4"/><circle cx="215" cy="115" r="3.4"/><circle cx="225" cy="115" r="3.4"/><circle cx="235" cy="115" r="3.4"/><circle cx="245" cy="115" r="3.4"/><circle cx="255" cy="115" r="3.4"/><circle cx="265" cy="115" r="3.4"/><circle cx="275" cy="115" r="3.4"/><circle cx="285" cy="115" r="3.4"/><circle cx="295" cy="115" r="3.4"/><circle cx="305" cy="115" r="3.4"/><circle cx="315" cy="115" r="3.4"/><circle cx="5" cy="125" r="3.4"/><circle cx="15" cy="125" r="3.4"/><circle cx="25" cy="125" r="3.4"/><circle cx="35" cy="125" r="3.4"/><circle cx="45" cy="125" r="3.4"/><circle cx="55" cy="125" r="3.4"/><circle cx="65" cy="125" r="3.4"/><circle cx="75" cy="125" r="3.4"/><circle cx="85" cy="125" r="3.4"/><circle cx="95" cy="125" r="3.4"/><circle cx="105" cy="125" r="3.4"/><circle cx="115" cy="125" r="3.4"/><circle cx="125" cy="125" r="3.4"/><circle cx="135" cy="125" r="3.4"/><circle cx="145" cy="125" r="3.4"/><circle cx="155" cy="125" r="3.4"/><circle cx="165" cy="125" r="3.4"/><circle cx="175" cy="125" r="3.4"/><circle cx="185" cy="125" r="3.4"/><circle cx="195" cy="125" r="3.4"/><circle cx="205" cy="125" r="3.4"/><circle cx="215" cy="125" r="3.4"/><circle cx="225" cy="125" r="3.4"/><circle cx="235" cy="125" r="3.4"/><circle cx="245" cy="125" r="3.4"/><circle cx="255" cy="125" r="3.4"/><circle cx="265" cy="125" r="3.4"/><circle cx="275" cy="125" r="3.4"/><circle cx="285" cy="125" r="3.4"/><circle cx="295" cy="125" r="3.4"/><circle cx="305" cy="125" r="3.4"/><circle cx="315" cy="125" r="3.4"/><circle cx="5" cy="135" r="3.4"/><circle cx="15" cy="135" r="3.4"/><circle cx="25" cy="135" r="3.4"/><circle cx="35" cy="135" r="3.4"/><circle cx="45" cy="135" r="3.4"/><circle cx="55" cy="135" r="3.4"/><circle cx="65" cy="135" r="3.4"/><circle cx="75" cy="135" r="3.4"/><circle cx="85" cy="135" r="3.4"/><circle cx="95" cy="135" r="3.4"/><circle cx="105" cy="135" r="3.4"/><circle cx="115" cy="135" r="3.4"/><circle cx="125" cy="135" r="3.4"/><circle cx="135" cy="135" r="3.4"/><circle cx="145" cy="135" r="3.4"/><circle cx="155" cy="135" r="3.4"/><circle cx="165" cy="135" r="3.4"/><circle cx="175" cy="135" r="3.4"/><circle cx="185" cy="135" r="3.4"/><circle cx="195" cy="135" r="3.4"/><circle cx="205" cy="135" r="3.4"/><circle cx="215" cy="135" r="3.4"/><circle cx="225" cy="135" r="3.4"/><circle cx="235" cy="135" r="3.4"/><circle cx="245" cy="135" r="3.4"/><circle cx="255" cy="135" r="3.4"/><circle cx="265" cy="135" r="3.4"/><circle cx="275" cy="135" r="3.4"/><circle cx="285" cy="135" r="3.4"/><circle cx="295" cy="135" r="3.4"/><circle cx="305" cy="135" r="3.4"/><circle cx="315" cy="135" r="3.4"/><circle cx="5" cy="145" r="3.4"/><circle cx="15" cy="145" r="3.4"/><circle cx="25" cy="145" r="3.4"/><circle cx="35" cy="145" r="3.4"/><circle cx="45" cy="145" r="3.4"/><circle cx="55" cy="145" r="3.4"/><circle cx="65" cy="145" r="3.4"/><circle cx="75" cy="145" r="3.4"/><circle cx="85" cy="145" r="3.4"/><circle cx="95" cy="145" r="3.4"/><circle cx="105" cy="145" r="3.4"/><circle cx="115" cy="145" r="3.4"/><circle cx="125" cy="145" r="3.4"/><circle cx="135" cy="145" r="3.4"/><circle cx="145" cy="145" r="3.4"/><circle cx="155" cy="145" r="3.4"/><circle cx="165" cy="145" r="3.4"/><circle cx="175" cy="145" r="3.4"/><circle cx="185" cy="145" r="3.4"/><circle cx="195" cy="145" r="3.4"/><circle cx="205" cy="145" r="3.4"/><circle cx="215" cy="145" r="3.4"/><circle cx="225" cy="145" r="3.4"/><circle cx="235" cy="145" r="3.4"/><circle cx="245" cy="145" r="3.4"/><circle cx="255" cy="145" r="3.4"/><circle cx="265" cy="145" r="3.4"/><circle cx="275" cy="145" r="3.4"/><circle cx="285" cy="145" r="3.4"/><circle cx="295" cy="145" r="3.4"/><circle cx="305" cy="145" r="3.4"/><circle cx="315" cy="145" r="3.4"/><circle cx="5" cy="155" r="3.4"/><circle cx="15" cy="155" r="3.4"/><circle cx="25" cy="155" r="3.4"/><circle cx="35" cy="155" r="3.4"/><circle cx="45" cy="155" r="3.4"/><circle cx="55" cy="155" r="3.4"/><circle cx="65" cy="155" r="3.4"/><circle cx="75" cy="155" r="3.4"/><circle cx="85" cy="155" r="3.4"/><circle cx="95" cy="155" r="3.4"/><circle cx="105" cy="155" r="3.4"/><circle cx="115" cy="155" r="3.4"/><circle cx="125" cy="155" r="3.4"/><circle cx="135" cy="155" r="3.4"/><circle cx="145" cy="155" r="3.4"/><circle cx="155" cy="155" r="3.4"/><circle cx="165" cy="155" r="3.4"/><circle cx="175" cy="155" r="3.4"/><circle cx="185" cy="155" r="3.4"/><circle cx="195" cy="155" r="3.4"/><circle cx="205" cy="155" r="3.4"/><circle cx="215" cy="155" r="3.4"/><circle cx="225" cy="155" r="3.4"/><circle cx="235" cy="155" r="3.4"/><circle cx="245" cy="155" r="3.4"/><circle cx="255" cy="155" r="3.4"/><circle cx="265" cy="155" r="3.4"/><circle cx="275" cy="155" r="3.4"/><circle cx="285" cy="155" r="3.4"/><circle cx="295" cy="155" r="3.4"/><circle cx="305" cy="155" r="3.4"/><circle cx="315" cy="155" r="3.4"/></g>
+  <g class="led-x"><circle cx="85" cy="5" r="3.7"/><circle cx="95" cy="5" r="3.7"/><circle cx="225" cy="5" r="3.7"/><circle cx="235" cy="5" r="3.7"/><circle cx="95" cy="15" r="3.7"/><circle cx="105" cy="15" r="3.7"/><circle cx="215" cy="15" r="3.7"/><circle cx="225" cy="15" r="3.7"/><circle cx="105" cy="25" r="3.7"/><circle cx="115" cy="25" r="3.7"/><circle cx="205" cy="25" r="3.7"/><circle cx="215" cy="25" r="3.7"/><circle cx="115" cy="35" r="3.7"/><circle cx="125" cy="35" r="3.7"/><circle cx="195" cy="35" r="3.7"/><circle cx="205" cy="35" r="3.7"/><circle cx="125" cy="45" r="3.7"/><circle cx="135" cy="45" r="3.7"/><circle cx="185" cy="45" r="3.7"/><circle cx="195" cy="45" r="3.7"/><circle cx="135" cy="55" r="3.7"/><circle cx="145" cy="55" r="3.7"/><circle cx="175" cy="55" r="3.7"/><circle cx="185" cy="55" r="3.7"/><circle cx="145" cy="65" r="3.7"/><circle cx="155" cy="65" r="3.7"/><circle cx="165" cy="65" r="3.7"/><circle cx="175" cy="65" r="3.7"/><circle cx="155" cy="75" r="3.7"/><circle cx="165" cy="75" r="3.7"/><circle cx="145" cy="85" r="3.7"/><circle cx="155" cy="85" r="3.7"/><circle cx="165" cy="85" r="3.7"/><circle cx="175" cy="85" r="3.7"/><circle cx="135" cy="95" r="3.7"/><circle cx="145" cy="95" r="3.7"/><circle cx="175" cy="95" r="3.7"/><circle cx="185" cy="95" r="3.7"/><circle cx="125" cy="105" r="3.7"/><circle cx="135" cy="105" r="3.7"/><circle cx="185" cy="105" r="3.7"/><circle cx="195" cy="105" r="3.7"/><circle cx="115" cy="115" r="3.7"/><circle cx="125" cy="115" r="3.7"/><circle cx="195" cy="115" r="3.7"/><circle cx="205" cy="115" r="3.7"/><circle cx="105" cy="125" r="3.7"/><circle cx="115" cy="125" r="3.7"/><circle cx="205" cy="125" r="3.7"/><circle cx="215" cy="125" r="3.7"/><circle cx="95" cy="135" r="3.7"/><circle cx="105" cy="135" r="3.7"/><circle cx="215" cy="135" r="3.7"/><circle cx="225" cy="135" r="3.7"/><circle cx="85" cy="145" r="3.7"/><circle cx="95" cy="145" r="3.7"/><circle cx="225" cy="145" r="3.7"/><circle cx="235" cy="145" r="3.7"/><circle cx="85" cy="155" r="3.7"/><circle cx="235" cy="155" r="3.7"/></g>
+  <g class="led-a"><circle cx="155" cy="5" r="3.7"/><circle cx="155" cy="15" r="3.7"/><circle cx="165" cy="15" r="3.7"/><circle cx="155" cy="25" r="3.7"/><circle cx="165" cy="25" r="3.7"/><circle cx="175" cy="25" r="3.7"/><circle cx="185" cy="25" r="3.7"/><circle cx="155" cy="35" r="3.7"/><circle cx="165" cy="35" r="3.7"/><circle cx="175" cy="35" r="3.7"/><circle cx="185" cy="35" r="3.7"/><circle cx="195" cy="35" r="3.7"/><circle cx="205" cy="35" r="3.7"/><circle cx="155" cy="45" r="3.7"/><circle cx="165" cy="45" r="3.7"/><circle cx="175" cy="45" r="3.7"/><circle cx="185" cy="45" r="3.7"/><circle cx="195" cy="45" r="3.7"/><circle cx="205" cy="45" r="3.7"/><circle cx="215" cy="45" r="3.7"/><circle cx="155" cy="55" r="3.7"/><circle cx="165" cy="55" r="3.7"/><circle cx="175" cy="55" r="3.7"/><circle cx="185" cy="55" r="3.7"/><circle cx="195" cy="55" r="3.7"/><circle cx="205" cy="55" r="3.7"/><circle cx="215" cy="55" r="3.7"/><circle cx="225" cy="55" r="3.7"/><circle cx="235" cy="55" r="3.7"/><circle cx="35" cy="65" r="3.7"/><circle cx="45" cy="65" r="3.7"/><circle cx="55" cy="65" r="3.7"/><circle cx="65" cy="65" r="3.7"/><circle cx="75" cy="65" r="3.7"/><circle cx="85" cy="65" r="3.7"/><circle cx="95" cy="65" r="3.7"/><circle cx="105" cy="65" r="3.7"/><circle cx="115" cy="65" r="3.7"/><circle cx="125" cy="65" r="3.7"/><circle cx="135" cy="65" r="3.7"/><circle cx="145" cy="65" r="3.7"/><circle cx="155" cy="65" r="3.7"/><circle cx="165" cy="65" r="3.7"/><circle cx="175" cy="65" r="3.7"/><circle cx="185" cy="65" r="3.7"/><circle cx="195" cy="65" r="3.7"/><circle cx="205" cy="65" r="3.7"/><circle cx="215" cy="65" r="3.7"/><circle cx="225" cy="65" r="3.7"/><circle cx="235" cy="65" r="3.7"/><circle cx="245" cy="65" r="3.7"/><circle cx="255" cy="65" r="3.7"/><circle cx="35" cy="75" r="3.7"/><circle cx="45" cy="75" r="3.7"/><circle cx="55" cy="75" r="3.7"/><circle cx="65" cy="75" r="3.7"/><circle cx="75" cy="75" r="3.7"/><circle cx="85" cy="75" r="3.7"/><circle cx="95" cy="75" r="3.7"/><circle cx="105" cy="75" r="3.7"/><circle cx="115" cy="75" r="3.7"/><circle cx="125" cy="75" r="3.7"/><circle cx="135" cy="75" r="3.7"/><circle cx="145" cy="75" r="3.7"/><circle cx="155" cy="75" r="3.7"/><circle cx="165" cy="75" r="3.7"/><circle cx="175" cy="75" r="3.7"/><circle cx="185" cy="75" r="3.7"/><circle cx="195" cy="75" r="3.7"/><circle cx="205" cy="75" r="3.7"/><circle cx="215" cy="75" r="3.7"/><circle cx="225" cy="75" r="3.7"/><circle cx="235" cy="75" r="3.7"/><circle cx="245" cy="75" r="3.7"/><circle cx="255" cy="75" r="3.7"/><circle cx="265" cy="75" r="3.7"/><circle cx="275" cy="75" r="3.7"/><circle cx="35" cy="85" r="3.7"/><circle cx="45" cy="85" r="3.7"/><circle cx="55" cy="85" r="3.7"/><circle cx="65" cy="85" r="3.7"/><circle cx="75" cy="85" r="3.7"/><circle cx="85" cy="85" r="3.7"/><circle cx="95" cy="85" r="3.7"/><circle cx="105" cy="85" r="3.7"/><circle cx="115" cy="85" r="3.7"/><circle cx="125" cy="85" r="3.7"/><circle cx="135" cy="85" r="3.7"/><circle cx="145" cy="85" r="3.7"/><circle cx="155" cy="85" r="3.7"/><circle cx="165" cy="85" r="3.7"/><circle cx="175" cy="85" r="3.7"/><circle cx="185" cy="85" r="3.7"/><circle cx="195" cy="85" r="3.7"/><circle cx="205" cy="85" r="3.7"/><circle cx="215" cy="85" r="3.7"/><circle cx="225" cy="85" r="3.7"/><circle cx="235" cy="85" r="3.7"/><circle cx="245" cy="85" r="3.7"/><circle cx="255" cy="85" r="3.7"/><circle cx="265" cy="85" r="3.7"/><circle cx="275" cy="85" r="3.7"/><circle cx="35" cy="95" r="3.7"/><circle cx="45" cy="95" r="3.7"/><circle cx="55" cy="95" r="3.7"/><circle cx="65" cy="95" r="3.7"/><circle cx="75" cy="95" r="3.7"/><circle cx="85" cy="95" r="3.7"/><circle cx="95" cy="95" r="3.7"/><circle cx="105" cy="95" r="3.7"/><circle cx="115" cy="95" r="3.7"/><circle cx="125" cy="95" r="3.7"/><circle cx="135" cy="95" r="3.7"/><circle cx="145" cy="95" r="3.7"/><circle cx="155" cy="95" r="3.7"/><circle cx="165" cy="95" r="3.7"/><circle cx="175" cy="95" r="3.7"/><circle cx="185" cy="95" r="3.7"/><circle cx="195" cy="95" r="3.7"/><circle cx="205" cy="95" r="3.7"/><circle cx="215" cy="95" r="3.7"/><circle cx="225" cy="95" r="3.7"/><circle cx="235" cy="95" r="3.7"/><circle cx="245" cy="95" r="3.7"/><circle cx="255" cy="95" r="3.7"/><circle cx="155" cy="105" r="3.7"/><circle cx="165" cy="105" r="3.7"/><circle cx="175" cy="105" r="3.7"/><circle cx="185" cy="105" r="3.7"/><circle cx="195" cy="105" r="3.7"/><circle cx="205" cy="105" r="3.7"/><circle cx="215" cy="105" r="3.7"/><circle cx="225" cy="105" r="3.7"/><circle cx="235" cy="105" r="3.7"/><circle cx="155" cy="115" r="3.7"/><circle cx="165" cy="115" r="3.7"/><circle cx="175" cy="115" r="3.7"/><circle cx="185" cy="115" r="3.7"/><circle cx="195" cy="115" r="3.7"/><circle cx="205" cy="115" r="3.7"/><circle cx="215" cy="115" r="3.7"/><circle cx="155" cy="125" r="3.7"/><circle cx="165" cy="125" r="3.7"/><circle cx="175" cy="125" r="3.7"/><circle cx="185" cy="125" r="3.7"/><circle cx="195" cy="125" r="3.7"/><circle cx="205" cy="125" r="3.7"/><circle cx="155" cy="135" r="3.7"/><circle cx="165" cy="135" r="3.7"/><circle cx="175" cy="135" r="3.7"/><circle cx="185" cy="135" r="3.7"/><circle cx="155" cy="145" r="3.7"/><circle cx="165" cy="145" r="3.7"/><circle cx="155" cy="155" r="3.7"/></g>
+</svg><div class="plate">RIGHT GUARD</div></div></div>
+      <div class="led-cap" aria-hidden="true"><span class="cap-x"><b>✕ 우회전 불가</b>보행자를 감지했어요</span><span class="cap-a"><b>→ 우회전 가능</b>보행자가 없어요</span></div>
+    </div>
+  </div>
+</div>
+
+<nav class="toc" aria-label="목차"><div class="wrap">
+  <a href="#why"><span class="n">01</span>왜 만들었나요</a>
+  <a href="#goal"><span class="n">02</span>목적과 목표</a>
+  <a href="#how"><span class="n">03</span>어떻게 작동하나요</a>
+  <a href="#path"><span class="n">04</span>걸어온 길</a>
+  <a href="#next"><span class="n">05</span>앞으로</a>
+  <a href="#team"><span class="n">06</span>만든 사람들</a>
+</div></nav>
+
+<main class="wrap">
+  <section class="sec" id="why" aria-labelledby="h-why">
+    <div class="sec-h"><p class="k">01 · 왜 만들었나요</p><h2 id="h-why">우회전은 운전자가 가장 바쁜 순간이에요</h2>
+      <p>우회전하는 운전자는 왼쪽에서 오는 차를 살피면서, 동시에 오른쪽 횡단보도의 보행자까지 챙겨야 해요. 눈이 왼쪽에 가 있는 사이 오른쪽에서 사람이 들어오면 늦게 보게 되죠.</p></div>
+    <div class="grid3">
+      <div class="card"><span class="big">56<small>%</small></span><h3>우회전 사고 사망자 중 보행자</h3>
+        <p>2025년 우회전 교통사고는 1만 4,650건, 사망자 75명 가운데 42명이 보행자였어요. 전체 교통사고 사망자 중 보행자 비율(36.3%)보다 훨씬 높아요.</p>
+        <span class="src"><a href="https://www.segye.com/newsView/20260420501611" target="_blank" rel="noopener">세계일보 2026-04-20</a></span></div>
+      <div class="card"><span class="big">10.3<small>%</small> <i class="to">→</i><span class="go">89.7</span><small>%</small></span><h3>분명한 신호가 있으면 멈춰요</h3>
+        <p>2022년 7월부터 '건너려는' 보행자 앞에서도 멈춰야 하고, 2023년 1월부터는 차량 신호가 빨강일 때 멈춘 뒤 우회전해야 해요. 하지만 2022년 9월 우회전 신호등 시범운영 때 신호등이 없는 곳의 일시정지 준수율은 10.3%에 그쳤고, 신호등을 단 뒤에는 89.7%로 올랐어요.</p>
+        <span class="src"><a href="https://mediahub.seoul.go.kr/archives/2003631" target="_blank" rel="noopener">서울시 미디어허브</a> · <a href="https://www.fnnews.com/news/202301171136541603" target="_blank" rel="noopener">파이낸셜뉴스 2023-01-17</a> · 포항남부경찰서 (<a href="https://www.kbmaeil.com/article/202304120359611" target="_blank" rel="noopener">경북매일 2023-04-12</a>)</span></div>
+      <div class="card"><span class="big">사각지대</span><h3>보이지 않으면 멈출 수 없어요</h3>
+        <p>보문역 5번 출구 앞 공사장 가림막처럼, 모퉁이의 시설물은 다가오는 보행자를 가릴 수 있어요. 그러면 운전자는 사람이 차도 앞에 나타난 뒤에야 알아채고, 그때는 이미 늦을 수 있어요.</p>
+        <span class="src">시범 설치 후보지 · 보문역 사거리(보문로 × 고려대로)</span></div>
+    </div>
+  </section>
+
+  <section class="sec" id="goal" aria-labelledby="h-goal">
+    <div class="sec-h"><p class="k">02 · 목적과 목표</p><h2 id="h-goal">운전자 대신 먼저 보고, 분명하게 알려 줘요</h2></div>
+    <div class="purpose"><div class="purpose-in">
+      <p class="k">목적</p>
+      <blockquote>우회전하는 운전자가 '지금 멈춰야 하는지'를 신호처럼 분명하게 알 수 있게 해서, 횡단보도의 보행자를 먼저 지킨다.</blockquote>
+      <p>운전자의 눈과 주의력에만 기대지 않고, 모퉁이에 둔 장치가 보행자를 대신 보고 알려 줘요. <b class="hl-gold">보행자가 있을 때만</b> ✕로 멈춤을 알리고, 없을 때는 →로 우회전을 허용해요. 이렇게 보행자 보호 중심의 교통안전 체계를 제안해요.</p>
+    </div></div>
+    <div class="grid3">
+      <div class="card goal"><span class="num">1</span><h3>믿을 수 있는 감지</h3>
+        <p>건너려는 보행자를 놓치지 않고, 사람이 아닌 움직임에는 반응하지 않고, 바로 알려 줘요. 실내 실험 6가지 상황을 각 20번씩 반복해 확인해요.</p>
+        <div class="kpi"><span>감지율 95% 이상</span><span>오감지율 5% 이하</span><span>반응 1초 이내</span></div></div>
+      <div class="card goal"><span class="num">2</span><h3>운전자가 실제로 멈추게</h3>
+        <p>장치가 있을 때 운전자의 일시정지가 얼마나 늘어나는지 봐요. 메타버스에서 장치가 있을 때와 없을 때를 먼저 비교하고, 실제 도로에서는 설치 전후 관찰로 확인해요.</p>
+        <div class="kpi"><span>일시정지 이행률 향상</span><span>건너려는 보행자 감지 성공률</span></div></div>
+      <div class="card goal"><span class="num">3</span><h3>실제 도로에서 확인</h3>
+        <p>보문역 사거리에 시범 설치해 약 한 달 동안 차량·보행자 흐름과 시민 반응을 관찰해요. 규제 샌드박스 실증특례와 성북구청 협의를 거쳐요.</p>
+        <div class="kpi"><span>보문역 사거리 시범 설치</span><span>약 1개월 관찰</span></div></div>
+    </div>
+    <div class="sim">
+      <div class="sim-h"><div><b>메타버스로 먼저 확인한 효과</b><span class="sub">평상시 낮 · 5장면 × 40분 · 장치 없음 → 있음</span></div><a href="compare.html">효과 비교 페이지 열기 →</a></div>
+      <div class="sim-g">
+        <div><span class="v">64%<i>→</i><span class="up">92%</span></span><small>운전자 일시정지 이행률</small></div>
+        <div><span class="v">8%<i>→</i><span class="up">76%</span></span><small>그중 건너려는 보행자 앞에서</small></div>
+        <div><span class="v"><span class="bad">79%</span></span><small>건너려는 보행자 감지 성공률 · 목표 95%</small></div>
+        <div><span class="v"><span class="bad">11%</span></span><small>오감지율 · 목표 5%</small></div>
+      </div>
+      <p class="note">시뮬레이션 결과예요. 운전자 행동 가정(장치 없이 스스로 멈추는 운전자 10%, ✕를 보면 멈추는 운전자 80%)에 기대고 있고, 감지 성공률과 오감지율은 아직 목표에 못 미쳐요. 실제 효과는 실험과 시범 설치로 확인할 예정이에요.</p>
+    </div>
+  </section>
+
+  <section class="sec" id="how" aria-labelledby="h-how">
+    <div class="sec-h"><p class="k">03 · 어떻게 작동하나요</p><h2 id="h-how">레이더가 보고, LED가 알려 줘요</h2>
+      <p>프로토타입 이후 만든 지금의 Right Guard는 레이더 센서 유닛과 LED 유닛, 두 개의 ESP32로 이루어져 있어요. 노트북 없이 전원만 있으면 혼자 동작해요.</p></div>
+    <div class="how">
+      <figure class="map-box" style="margin:0"><svg class="map" viewBox="40 0 520 440" role="img" aria-labelledby="mapT mapD">
+  <title id="mapT">Right Guard를 설치한 모퉁이 (위에서 본 그림)</title>
+  <desc id="mapD">보문로에서 올라와 고려대로로 우회전하는 차, 모퉁이 기둥의 레이더 감지 구역과 LED, 횡단보도 앞에서 건너려는 보행자, 공사장 가림막에 가려 운전자에게 보이지 않는 보행자</desc>
+  <defs>
+    <clipPath id="siteClip"><rect x="270" y="230" width="330" height="230"/></clipPath>
+    <marker id="arr" viewBox="0 0 10 10" refX="7" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0 0L10 5L0 10z" fill="#efe6d2"/></marker>
+    <marker id="arrA" viewBox="0 0 10 10" refX="7" refY="5" markerWidth="6" markerHeight="6" orient="auto-start-reverse"><path d="M0 0L10 5L0 10z" fill="#f4b942"/></marker>
+  </defs>
+  <rect width="600" height="460" fill="#2a3338"/>
+  <!-- 도로: 보문로(세로) · 고려대로(가로) -->
+  <rect x="60" y="0" width="160" height="460" fill="#161e22"/>
+  <rect x="0" y="30" width="600" height="140" fill="#161e22"/>
+  <path d="M140 0V30M140 244V460M0 100H60M300 100H600" stroke="#e9c983" stroke-width="2" opacity=".55"/>
+  <path d="M100 0V30M180 0V30M100 244V460M180 244V460M0 65H60M0 135H60M300 65H600M300 135H600" stroke="#55646a" stroke-width="2" stroke-dasharray="10 10"/>
+  <path d="M140 244H220" stroke="#efe6d2" stroke-width="3" opacity=".7"/>
+  <!-- 횡단보도 -->
+  <g fill="#cfc8b6" opacity=".72"><rect x="244" y="38" width="36" height="10" rx="1"/><rect x="244" y="54" width="36" height="10" rx="1"/><rect x="244" y="70" width="36" height="10" rx="1"/><rect x="244" y="86" width="36" height="10" rx="1"/><rect x="244" y="102" width="36" height="10" rx="1"/><rect x="244" y="118" width="36" height="10" rx="1"/><rect x="244" y="134" width="36" height="10" rx="1"/><rect x="244" y="150" width="36" height="10" rx="1"/><rect x="70" y="194" width="10" height="36" rx="1"/><rect x="86" y="194" width="10" height="36" rx="1"/><rect x="102" y="194" width="10" height="36" rx="1"/><rect x="118" y="194" width="10" height="36" rx="1"/><rect x="134" y="194" width="10" height="36" rx="1"/><rect x="150" y="194" width="10" height="36" rx="1"/><rect x="166" y="194" width="10" height="36" rx="1"/><rect x="182" y="194" width="10" height="36" rx="1"/><rect x="198" y="194" width="10" height="36" rx="1"/></g>
+  <!-- 레이더 감지 구역 (가림막 뒤는 가려짐) -->
+  <path class="map-fan" d="M236 188L253.4 89.5A100 100 0 0 1 317.9 245.4Z"/>
+  <!-- 공사장 가림막 -->
+  <rect x="270" y="230" width="330" height="230" fill="#33161d"/>
+  <g clip-path="url(#siteClip)" stroke="#a01334" stroke-width="2" opacity=".55"><path d="M40 460l230 -230"/><path d="M62 460l230 -230"/><path d="M84 460l230 -230"/><path d="M106 460l230 -230"/><path d="M128 460l230 -230"/><path d="M150 460l230 -230"/><path d="M172 460l230 -230"/><path d="M194 460l230 -230"/><path d="M216 460l230 -230"/><path d="M238 460l230 -230"/><path d="M260 460l230 -230"/><path d="M282 460l230 -230"/><path d="M304 460l230 -230"/><path d="M326 460l230 -230"/><path d="M348 460l230 -230"/><path d="M370 460l230 -230"/><path d="M392 460l230 -230"/><path d="M414 460l230 -230"/><path d="M436 460l230 -230"/><path d="M458 460l230 -230"/><path d="M480 460l230 -230"/><path d="M502 460l230 -230"/><path d="M524 460l230 -230"/><path d="M546 460l230 -230"/><path d="M568 460l230 -230"/><path d="M590 460l230 -230"/></g>
+  <rect x="270" y="230" width="330" height="230" fill="none" stroke="#c93a56" stroke-width="3"/>
+  <!-- 운전자 시야: 가림막에 막힘 -->
+  <path d="M200 300L270 247.2" stroke="#f4b942" stroke-width="2.2" stroke-dasharray="6 5"/>
+  <path d="M270 247.2L322 208" stroke="#f4b942" stroke-width="2" stroke-dasharray="2 6" opacity=".45"/>
+  <g transform="translate(270 247.2)" stroke="#ff6b5b" stroke-width="3.2" stroke-linecap="round"><path d="M-7 -7L7 7M7 -7L-7 7"/></g>
+  <!-- 우회전 경로 + 차 -->
+  <path d="M200 296V214Q200 152 262 152H400" fill="none" stroke="#efe6d2" stroke-width="3" stroke-dasharray="9 7" marker-end="url(#arr)" opacity=".85"/>
+  <rect x="188" y="300" width="24" height="42" rx="5" fill="#efe6d2"/>
+  <rect x="192" y="306" width="16" height="10" rx="2" fill="#1b2a30"/>
+  <!-- 기둥: 레이더 + 운전자 쪽 LED -->
+  <rect x="222" y="198" width="30" height="17" rx="2.5" fill="#0b0c0e" stroke="#ff6b5b" stroke-width="1.5"/>
+  <path d="M231 202l12 9M243 202l-12 9" stroke="#ff6b5b" stroke-width="2.6" stroke-linecap="round"/>
+  <circle cx="236" cy="188" r="6" fill="#c93a56" stroke="#efe6d2" stroke-width="2"/>
+  <!-- 보행자 -->
+  <circle cx="268" cy="186" r="7" fill="#f4b942"/>
+  <path d="M268 177v-12" stroke="#f4b942" stroke-width="2.5" marker-end="url(#arrA)"/>
+  <circle cx="322" cy="208" r="7" fill="#f4b942"/>
+  <path d="M312 208h-12" stroke="#f4b942" stroke-width="2.5" marker-end="url(#arrA)"/>
+  <!-- 번호 -->
+  <g class="pin"><circle cx="294" cy="118" r="12"/><text x="294" y="123">1</text></g>
+  <g class="pin"><circle cx="237" cy="240" r="12"/><text x="237" y="245">2</text></g>
+  <g class="pin"><circle cx="232" cy="330" r="12"/><text x="232" y="335">3</text></g>
+  <g class="pin"><circle cx="292" cy="188" r="12"/><text x="292" y="193">4</text></g>
+  <g class="pin"><circle cx="350" cy="196" r="12"/><text x="350" y="201">5</text></g>
+  <!-- 이름 -->
+  <text class="road" x="140" y="430" text-anchor="middle">↑ 보문로 · 신설동에서</text>
+  <text class="road top" x="468" y="21" text-anchor="middle">고려대로 · 고려대 방향 →</text>
+  <text class="road site" x="435" y="352" text-anchor="middle">공사장 가림막</text>
+</svg>
+        <ol class="legend">
+          <li><span class="p">1</span>레이더 감지 구역 (6 m · 좌우 ±60°)</li>
+          <li><span class="p">2</span>Right Guard 기둥: 레이더 + LED</li>
+          <li><span class="p">3</span>보문로에서 올라와 우회전하는 차</li>
+          <li><span class="p">4</span>횡단보도 앞에서 건너려는 보행자</li>
+          <li><span class="p">5</span>가림막에 가려 운전자가 못 보는 보행자</li>
+          <li><span class="ln" aria-hidden="true"></span>운전자 시야: 가림막에 막혀 5가 안 보여요</li>
+        </ol>
+      </figure>
+      <ol class="steps">
+        <li><span class="si"><svg viewBox="0 0 26 26" fill="none" stroke="#3fd68a" stroke-width="2" stroke-linecap="round"><path d="M5 21a12 12 0 0 1 0-16"/><path d="M9 17.5a7 7 0 0 1 0-9"/><circle cx="14" cy="13" r="2.2" fill="#3fd68a" stroke="none"/><path d="M19 9l3-2M19 13h4M19 17l3 2"/></svg></span><div><b>감지<span class="tag">센서 유닛</span></b><p>모퉁이 기둥(높이 약 1.1 m)의 LD2450 레이더가 횡단보도와 그 앞 보행로를 봐요. 사람의 위치와 속도를 최대 3명까지 동시에 따라가요.</p></div></li>
+        <li><span class="si"><svg viewBox="0 0 26 26" fill="none" stroke="#e9c983" stroke-width="2" stroke-linejoin="round"><rect x="6" y="6" width="14" height="14" rx="2"/><path d="M10 2v4M16 2v4M10 20v4M16 20v4M2 10h4M2 16h4M20 10h4M20 16h4" stroke-linecap="round"/><path d="M10 13l2 2 4-4" stroke-linecap="round"/></svg></span><div><b>판단<span class="tag">LED 유닛</span></b><p>센서 유닛(ESP32)이 블루투스로 알리면, LED 유닛(ESP32)이 우회전해도 되는지 판단해요. 판단이 불확실하면 언제나 보행자 쪽으로, 즉 ✕로 기울어요.</p></div></li>
+        <li><span class="si"><svg viewBox="0 0 26 26"><rect x="2" y="5" width="22" height="16" rx="2.5" fill="#0a0b0d" stroke="#ff6b5b" stroke-width="1.6"/><path d="M8.5 9l9 8M17.5 9l-9 8" stroke="#ff6b5b" stroke-width="2.4" stroke-linecap="round"/></svg></span><div><b>표시<span class="tag">P10 LED 32×16</span></b><p>운전자 쪽을 향한 LED에 빨간 ✕(우회전 불가) 또는 초록 →(우회전 가능)를 띄워요. 보행자 신호와 헷갈리지 않게 방향 화살표 모양으로 그렸어요.</p></div></li>
+      </ol>
+    </div>
+
+    <div class="flow" aria-label="시스템 구성">
+      <div class="node"><span class="k">센서 유닛</span><b>ESP32 + LD2450</b><p>사람의 거리·각도·속도를 읽어 보냄</p></div>
+      <div class="link bt"><svg viewBox="0 0 40 14" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M2 7h34M30 2l6 5-6 5"/></svg><span>블루투스</span></div>
+      <div class="node"><span class="k">LED 유닛</span><b>ESP32 + P10 LED</b><p>판단하고 ✕ / → 표시 · 5V 별도 전원</p></div>
+      <div class="link usb"><svg viewBox="0 0 40 14" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M6 7h28M30 2l6 5-6 5M10 2L4 7l6 5"/></svg><span>USB</span></div>
+      <div class="node"><span class="k">시연 · 실험</span><b>메타버스 (보문역 사거리)</b><p>가상 보행자로 실제 LED를 시험 · 연결이 끊겨도 장치는 혼자 동작</p></div>
+    </div>
+
+    <div class="rules">
+      <div class="card"><h3>판단 규칙</h3>
+        <ul style="margin-top:14px">
+          <li><span class="ic x">✕</span><span><b>사람이 감지되면 1초 안에 ✕.</b> 횡단보도와 그 앞 보행로를 보는 감지 구역에 사람이 들어오면 우회전 불가예요.</span></li>
+          <li><span class="ic s">1초</span><span><b>사람이 벗어나도 1초 동안 ✕ 유지.</b> 서두른 출발을 막는 안전 지연이에요.</span></li>
+          <li><span class="ic a">→</span><span><b>아무도 없고 안전 지연이 끝나면 →.</b> 그때 우회전할 수 있어요.</span></li>
+          <li><span class="ic x">!</span><span><b>센서 유닛과 블루투스가 끊기면 ✕ 유지.</b> 고장 났을 때도 보행자 안전이 먼저예요.</span></li>
+          <li><span class="ic s">3초</span><span><b>메타버스 신호가 3초 넘게 끊기면 실제 센서만 사용.</b> 시연 중 케이블이 빠져도 장치는 계속 동작해요.</span></li>
+        </ul></div>
+      <div class="card"><h3>구성과 설치 기준</h3>
+        <table class="spec">
+          <tr><th>센서 유닛</th><td>ESP32 DevKit + LD2450 레이더 (최대 3명 동시 추적)</td></tr>
+          <tr><th>LED 유닛</th><td>ESP32 DevKit + P10 LED 패널 32×16 (약 32×16 cm)</td></tr>
+          <tr><th>설치 위치</th><td>모퉁이 보도 위 전봇대, 횡단보도 진입부 쪽 · 높이 약 1.1 m (시뮬레이션 기준)</td></tr>
+          <tr><th>감지 범위</th><td>거리 6 m · 좌우 ±60° · 상하 ±35°, 횡단보도 쪽으로 약 10° 조준</td></tr>
+          <tr><th>전원</th><td>보조배터리로 노트북 없이 동작 · 야외용 외부 전원은 검토 중</td></tr>
+        </table></div>
+    </div>
+  </section>
+
+  <section class="sec" id="path" aria-labelledby="h-path">
+    <div class="sec-h"><p class="k">04 · 걸어온 길</p><h2 id="h-path">프로토타입에서 혼자 동작하는 장치까지</h2></div>
+    <ol class="tl">
+<li class="tl-i proto"><span class="tl-dot" aria-hidden="true"></span>
+          <div class="tl-when">중간발표까지</div><div class="tl-body"><b>첫 프로토타입</b><p>라즈베리 파이와 초음파 센서, 바닥 LED(빨강 STOP · 초록 SLOW)로 만든 유선 장치였어요. '건너는·건너려는 보행자가 있으면 정지'라는 도로교통법 판단을 코드로 옮기고, 초음파 · 초음파+적외선(PIR) · 카메라(YOLOv8n) 감지를 시험해 봤어요.</p></div></li>
+<li class="tl-i key"><span class="tl-dot" aria-hidden="true"></span>
+          <div class="tl-when">중간발표</div><div class="tl-body"><b>피드백: 뛰어오는 아이까지</b><p>걷는 사람뿐 아니라 갑자기 뛰어오는 아이까지 잡아야 한다는 의견을 받아, 센서와 장치 구조를 새로 정했어요.</p></div></li>
+<li class="tl-i "><span class="tl-dot" aria-hidden="true"></span>
+          <div class="tl-when">8월 1~2주</div><div class="tl-body"><b>개선 방향 확정</b><p>MCU를 ESP32 2대와 블루투스로 바꾸고, 운전자용 LED와 사람만 감지하는 레이더 센서(LD2410)를 샀어요.</p></div></li>
+<li class="tl-i "><span class="tl-dot" aria-hidden="true"></span>
+          <div class="tl-when">8월 3~4주</div><div class="tl-body"><b>레이더 연결 · P10 LED</b><p>LD2410 동작을 확인해 ESP32에 연결하고, 16×16 LED 대신 더 큰 P10 LED(32×16)를 켰어요.</p></div></li>
+<li class="tl-i "><span class="tl-dot" aria-hidden="true"></span>
+          <div class="tl-when">9월 1~2주</div><div class="tl-body"><b>LD2450으로 교체 · ✕/→ 완성</b><p>모양이 깨지고 센서 핀이 휘는 문제로 상위 모델 LD2450을 샀어요. LED 512개를 하나씩 켜 보며 픽셀 순서를 찾아 ✕와 →를 그렸어요.</p></div></li>
+<li class="tl-i key"><span class="tl-dot" aria-hidden="true"></span>
+          <div class="tl-when">9월 3~4주</div><div class="tl-body"><b>노트북 없이 혼자 동작</b><p>LD2450으로 사람의 거리·각도(최대 6 m · 좌우 ±60° · 상하 ±35°)를 읽고, 센서 ESP32와 LED ESP32를 블루투스로 이었어요. 전원만 있으면 사람을 보고 우회전 불가를 띄워요.</p></div></li>
+<li class="tl-i "><span class="tl-dot" aria-hidden="true"></span>
+          <div class="tl-when">10월 1주</div><div class="tl-body"><b>1초 안전 지연</b><p>사람이 사라진 뒤에도 1초 동안 ✕를 유지하도록 했어요. 사람이 다가오면 빨간 ✕, 벗어나면 초록 →가 되는 실내 시연 영상을 찍었어요.</p></div></li>
+<li class="tl-i now"><span class="tl-dot" aria-hidden="true"></span>
+          <div class="tl-when">10월 2주<span class="now-badge">지금</span></div><div class="tl-body"><b>메타버스와 효과 비교</b><p>지도교수님 제안으로 보문역 사거리를 3D 메타버스로 옮기고, 실제 LED와 USB로 잇는 연동 모듈을 만들었어요(실기기 연결 시험은 10월 예정). 장치가 있을 때와 없을 때를 같은 장면으로 비교하는 실험도 만들었어요.</p></div></li>
+    </ol>
+  </section>
+
+  <section class="sec" id="next" aria-labelledby="h-next">
+    <div class="sec-h"><p class="k">05 · 앞으로</p><h2 id="h-next">실험실에서 보문역 사거리로</h2>
+      <p>케이스를 만들어 실내·야외에서 성능을 재고, 규제 샌드박스 실증특례를 거쳐 보문역 사거리에 시범 설치할 계획이에요.</p></div>
+    <div class="phases">
+<div class="phase"><div class="ph-top"><span class="ph-k">A</span><span class="ph-m">10~11월</span></div>
+          <h3>실험 준비</h3><ul><li>진행일지(2) 제출 · 자문위원 면담 (10/11)</li><li>LED·센서 케이스 제작 (전봇대 설치 규격)</li><li>메타버스 ↔ 실제 LED 연결 시험</li></ul></div>
+<div class="phase"><div class="ph-top"><span class="ph-k">B</span><span class="ph-m">10~11월</span></div>
+          <h3>실내·야외 실험</h3><ul><li>실내 측정: 감지율 · 오감지율 · 반응시간</li><li>야외 실험: 케이스 장착, 주간·야간</li><li>보문역 사거리 관찰 (설치 전 데이터)</li></ul></div>
+<div class="phase"><div class="ph-top"><span class="ph-k">C</span><span class="ph-m">11~1월</span></div>
+          <h3>시범 설치 준비</h3><ul><li>스마트도시 규제 샌드박스 실증특례 신청</li><li>특례 심의 · 관계부처 확인 (약 80~90일)</li><li>성북구청 협의 · 설치 위치 확정</li></ul></div>
+<div class="phase"><div class="ph-top"><span class="ph-k">D</span><span class="ph-m">2~3월</span></div>
+          <h3>시범 설치 · 관찰</h3><ul><li>보문역 사거리 시범 설치 (예상 2월)</li><li>약 1개월 관찰 · 시민 인터뷰 · 사고 통계</li><li>후속 연구: LED 크기 · 전환 시간 최적화</li></ul></div>
+    </div>
+    <p class="callout"><b>시범 설치 시기</b>는 규제 샌드박스 심의(약 80~90일)에 따라 달라져요. 길어지면 ACRP로 이어서 진행해요.</p>
+    <div class="card todo"><h3>아직 남은 숙제</h3>
+      <p>메타버스 비교와 설계 가이드에서 드러난 점이에요.</p>
+      <ul>
+        <li><b>붐비는 시간:</b> LD2450은 사람을 3명까지만 따라가요. 사람이 많은 출퇴근 장면에서는 감지 성공률이 58%로 떨어졌어요.</li>
+        <li><b>긴 횡단보도:</b> 보문역 사거리 횡단보도(4차로, 약 13 m)는 6 m 레이더 하나로 건너편 끝까지 닿지 않아요. 설치 위치와 센서 개수를 함께 정해야 해요.</li>
+        <li><b>헛경보:</b> 연석까지 뛰어왔다 멈추는 아이에게도 ✕가 켜져, 하교 시간 장면의 오감지율이 25%였어요.</li>
+        <li><b>제도와 설치:</b> 실제 도로에 설치하려면 규제 샌드박스 실증특례와 성북구청 협의를 거쳐야 해요.</li>
+      </ul></div>
+  </section>
+
+  <section class="sec" id="team" aria-labelledby="h-team">
+    <div class="sec-h"><p class="k">06 · 만든 사람들</p><h2 id="h-team">Team Right Guard</h2></div>
+    <div class="team">
+<div class="mem"><span class="mem-i" aria-hidden="true">최</span><div><b>최준호</b><span class="role">PM · 통합</span><p>일정과 진행일지, 규제 샌드박스 신청, 성북구청 협의</p></div></div>
+<div class="mem"><span class="mem-i" aria-hidden="true">서</span><div><b>서무성</b><span class="role">SW · 펌웨어</span><p>판단 로직과 펌웨어, 메타버스 연동, 안전 지연·페일세이프</p></div></div>
+<div class="mem"><span class="mem-i" aria-hidden="true">안</span><div><b>안치우</b><span class="role">HW · 회로</span><p>회로와 배선, 케이스·전원, 전봇대 고정과 방수</p></div></div>
+<div class="mem"><span class="mem-i" aria-hidden="true">박</span><div><b>박주언</b><span class="role">측정 · 테스트</span><p>임계값 조정, 실내 측정, 보문역 관찰, 감지율·오감지율 정리</p></div></div>
+<div class="mem"><span class="mem-i" aria-hidden="true">우</span><div><b>우의진</b><span class="role">UI · 모형</span><p>LED 시인성 시험, 실내 모형 교차로, 시민 인터뷰, 발표 시각화</p></div></div>
+    </div>
+  </section>
+
+  <section class="sec" aria-labelledby="h-more">
+    <div class="sec-h"><p class="k">더 보기</p><h2 id="h-more">직접 보고 확인해 보세요</h2></div>
+    <div class="more">
+      <a href="RightGuard_Metaverse.html#sandbox"><b>직접 조작 시연 →</b><span>보문역 사거리 3D 메타버스에서 보행자를 보내고 Right Guard의 판단을 확인해요. 실제 LED와 USB로 연결할 수도 있어요.</span></a>
+      <a href="compare.html"><b>효과 비교 →</b><span>같은 장면을 장치가 없을 때와 있을 때로 나란히 돌려 일시정지 이행률·감지 성공률·오감지율을 비교해요.</span></a>
+      <a class="sub" href="Right_Guard_실행일정_체크리스트.html"><b>팀 체크리스트 (내부용)</b><span>역할별 할 일과 진행 상황을 체크해 공유해요.</span></a>
+      <a class="sub" href="Right_Guard_모형데모_설계가이드.html"><b>모형 데모 설계 가이드 (상세)</b><span>부품, 배선 주의점, 통신 규칙, 측정 프로토콜까지 담은 원본 가이드예요.</span></a>
+    </div>
+  </section>
+
+  <footer>
+    출처 · 2025년 우회전 사고 통계: <a href="https://www.segye.com/newsView/20260420501611" target="_blank" rel="noopener">세계일보 (2026-04-20)</a> · '통행하려고 하는 때' 일시정지 (2022-07-12 시행): <a href="https://mediahub.seoul.go.kr/archives/2003631" target="_blank" rel="noopener">서울시 미디어허브</a> · 적색 신호 우회전 일시정지·우회전 신호등 (2023-01-22 시행): <a href="https://www.fnnews.com/news/202301171136541603" target="_blank" rel="noopener">파이낸셜뉴스 (2023-01-17)</a> · 우회전 신호등 시범운영 일시정지 준수율 10.3% → 89.7%: 포항남부경찰서, <a href="https://www.kbmaeil.com/article/202304120359611" target="_blank" rel="noopener">경북매일 (2023-04-12)</a><br>
+    기기 설명은 진행일지(2)와 모형 데모 설계 가이드, 일정과 역할은 실행 일정 체크리스트, 메타버스 수치는 효과 비교 페이지의 기본 가정 결과를 바탕으로 정리했어요. 날짜는 예상이에요.
+    <p class="sl"><b>Right Turn, Right Time</b> · Team Right Guard · 고려대학교 KU CreativeX 창의연구 프로젝트(CRP)</p>
+  </footer>
+</main>
+</body>
+</html>
